@@ -1,0 +1,94 @@
+let bizy = binary (slow 255 $ run 255) 
+
+
+d1 
+$ slow (8/7)
+$ degradeBy 0.3
+$ repeatCycles 3
+$ struct (bizy) $ s "byd*8"
+
+d2 $ struct (binary 1 ) $ s "cp" # cps 0.6
+
+hush
+-------
+
+let bizy = binary (slow 255 $ run 255) 
+
+d1 $ s "kperc2:4" # gain 1.2 # room 0.5
+
+d2 
+$ slow (segment 4 $ wchoose [((8/7),0.4),((8/5),0.8)])
+$ layer [(degradeBy 0.5).(sometimes $ trunc 0.4) , (222 <~ ).(degradeBy 0.8).(# s "cp:1").(# gain 0.9)]
+$ struct bizy 
+$ s "byd:2"
+# room 0.4
+# size 0.4
+
+d4
+$ slow (segment 4 $ wchoose [((8/7),0.4),((8/5),0.8)])
+$ every 3 (within (0.65,1.5) (sometimes $ ply 4))
+$ juxBy 0.1 (+ up "[0,2,5,7,12?,9?,-9]")
+$ (3310 <~)
+$ struct bizy 
+$ s "superhoover*8" 
+|+ n (segment 8 $ range 1 "<12,5,17,19,15>" $ saw)
+# cps 1
+# gain 0.4
+# sustain (range 0.09 0.53   $ slow "<4 2 2 1 1 1 1 2>" $ rand)
+# slide   (range (-12) (-100)$ slow "<13 15 2 4 2 2 2>" $ rand )
+
+
+
+d4 
+-- $ slow (segment 7 $ wchoose [((8/7),0.8),((8/5),0.2)])
+$ ((slow (7) $ saw) <~) 
+$ selectF 0 [(misra "5" (slow 4 $ irand 20) ),(chatusra 3 4 ) ]
+$ s "superhoover*8" 
+|+ n (segment 8 $ range 1 "<12,5,17,19,15>" $ saw)
+# cps 1
+# gain 0.5
+# sustain (range 0.09 0.53   $ slow "<4 2 2 1 1 1 1 2>" $ rand)
+# slide   (range (-12) (-100)$ slow "<13 15 2 4 2 2 2>" $ rand )
+
+
+
+
+
+hush
+
+all = (slow 4)
+    
+((outside 4 (repeatCycles 4)).(slow (segment 4 $ wchoose [((8/7),0.8),((8/5),0.2)])))
+
+
+hush
+
+
+d1 $ rev $ cat [s "bd bd sn",s "sn sn bd", s"lt lt sd", s "sd sd bd"] # pan 1
+
+The above generates: 
+
+sn bd bd - bd sn sn - sd lt lt - bd sd sd
+
+However if you apply `outside`: 
+    
+d1 $ outside 4 (rev) $ cat [s "bd bd sn",s "sn sn bd", s"lt lt sd", s "sd sd bd"] # pan 1
+
+hush
+
+The result is : 
+
+bd sd sd sd lt lt bd sn sn sn bd bd 
+
+
+
+d2 $ rev $ cat [s "bd sd sd", s "sd lt lt", s "sn sn bd", s "bd bd sn"] # pan 0
+
+Notice the whole idea has been reversed.
+
+What this function is really doing is 'speeding up' the pattern by a given factor, 
+applying the given function to it, and then 'slowing it down' by the same factor. In other words, this:
+
+d1 $ slow 4 $ rev $ fast 4 $ cat [s "bd bd sn",s "sn sn bd", s"lt lt sd", s "sd sd bd"]
+
+hush

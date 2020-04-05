@@ -1,0 +1,166 @@
+do {
+    resetCycles;
+}
+
+hush
+
+
+-----swanhigh 0930
+
+d1
+-- $ outside 2 ((juxBy 0.6 ((3/128) ~>)))
+$ layer [id,(# speed (slow 13 $ range 4 (1) $ perlin + 1)).(# pan (osc64 (slow 10 $ range 5 15 $ sine) 0 1 sine))]
+-- $ slow 2
+$ sound "swan"
++ gain  (slow 4.1 $ segment 32 $ range 0.75 1 $ saw)
+# att 0.252
+# release (osc64 4.5 1.25 3 rand)
+-- # fshift (osc64 11 (1) 0.5 sine) 
+-- + nr
+# smear (osc64 16 0.01 0.5 sine)
+-- # comb 0.2
+-- # binshift (osc64 22 0 1 sine)
+# scram (slow 13.2 $ range 0.1 0.253 $ sine)
+-- # hbrick (rise1 2.3 0.5 0.05)
++ (slow 4 $ nl)
++ begin (slow 15 $ segment 24 $ range 0 0.8 $ saw)
++ cps ("<1.2 1.1 1.3 1>" * (slow 12 $ segment 16 $ range 2 0.43 $ sine))
+
+hush
+
+
+
+d3 
+$ slow 5
+-- $ outside 2 ((juxBy (slow 16 $ segment 640 $ range 0.3 0.7 $ sine) ((1/128) ~>)))
+$ palindrome
+$ (# cps ("<1.5 0.8 1.75 1.6 1.05 0.87 1.2 0.9 0.7>" * (range 0.5 0.3 $ slow 14.1 $ saw))) 
+$ stack [
+        -- whenmod 4 1 (sometimes ((degradeBy 0.4).(# speed (range 1 2 (perlin + 0.3))))) 
+        -- $ 
+        striate' "<223 200 180 100>" (slow 20.4 $ range 0.42 0.127 $ sine) 
+        $ plyWith "<22 18 16 19 12 15 21>" ((|* gain 0.91).(|* begin 0.5))
+        $ s "[swan]"
+]
+# atrl (choose [0,2.4,0.8,1.3]) 0.32
+-- # n (slow 1200 $ run 249)
++ n 5
+# lpf 13000
+-- # octer 0.15
+# waveloss 3
+-- |+ begin (slow 8.2 $ segment 32 $ range 0 0.9 $ saw)
++ gain 0.8
+# up "[0,12]"
+-- # fshift (osc64 11 (0.2) 1.4 sine)
+-- # scram (slow 16 $ range 0 0.4 $ sine)
+
+
+hush
+
+hush
+
+d3
+$ (# cps ("<2.5 0.8 1.75 1.6 1 1.05 1.1 1.2 0.9 0.7>" * (range 1 0.2 $ slow 15.1 $ saw))) 
+--   $ degradeBy 0.2
+--   $ every 3 (slow ((choose [1.25,1,1,1,1.33])))
+  -- $ chop "<10 19 20 10 40 55 50 50 50 15 10>"
+  -- $ every 3 ((# accelerate "1.05").((|+| n (slow 840 (irand 841)))))
+  $ striate' "<22 25 26 32>" (slow 15.2 $ range 0.8 0.4 $ sine )
+  (sound "swan"
+  # cut 0
+  # n "[1,3,4,6,15,9]"
+  + n 39
+  # begin (osc64 3 0 0.5 saw)
+--  |+ n "[53 .. 67]/12"
+    -- # pan (range 0.2 0.8 rand)
+  # speed (rise3 (16) 1 12)
+--   # gain (slow 10 (range 1 1.6 sine1))
+  -- # cutoff (slow 10 (range 200 7000 sine))
+  -- # scram 0.2
+--   # room 0.2
+--   # size 0.4
+  )
+  # gain 1
+  # atrl 1.2 2.1
+--   # binshift (osc64 12 0.1 0.8 sine)
+--   # scram (slow 16 $ range 0.4 0.8 $ sine)
+
+hush
+
+
+    
+d1
+    $ slow ( slow 12 $ range 1.5 4 $ saw)
+    -- $ degradeBy 0.2
+    -- $ layer [(#size 0.3).(# room 0.4).(0.2 <~)]
+    $ juxBy 0.6 ((slow 1.01).(0.1<~))
+    -- $ striateBy 15 (1/10) 
+    $ loopAt 2
+    $ sound "swan"
+    + begin (segment 16 $ range 0 0.9 $ sine)
+    # attack 0.8
+    -- + gain  (fast 1 $ smooth $ segment 16 $ range 0.5 1 $saw)
+    + release (segment 12 $ (smooth "[0.2 0.5 0.5 0 0 0.5 0 4 0 0 0 0 0 0 0 1]")) 
+    + up  (slow 2 $  smooth ( "[7 0 12 0 0 0 0 2 0 0 -5 0 0 0 0 1.5]" ) )
+    -- |+ speed  (slow 16 $ range (3.2) 4 $ perlin + 0.3 ) 
+    # hold (smooth (choose [0.3,0.2,0.7,2,3,1]) # shrand 10)
+    # n "[1,3,4,6,25,9]"
+    |+ n "[53 .. 57]/12"
+    + n 10
+    # cps 2.6
+    -- # cps (slow 20 $ segment 16 $ rangex 0.5 0.8 $ saw)
+    -- # accelerate ((choose [21,12.5,-26,-30,13]) # shrand 486)
+    
+    hush
+
+
+---洞雙人重複 SWAN輕快變奏
+
+    d2 
+    -- $ rev
+    $ slow "<2>"
+    -- $ degradeBy 0.3
+    $ every 4 (|- n "2")
+    $ every 10 (|- n "4")
+    $ plyWith "<22 18 5 8 20 23 32>" ((|* gain 0.84))
+    -- $ struct bizy
+    $ s "[swan]"
+    # atrl 1.3 1.23
+    # nr
+    # cps ("<4 4 2>" 
+          * (slow 17.1 $ range 0.3 1 $ sine)
+          )
+    # speed (-1)
+    -- + n (arp "<[updown ~] [up pinkyup]/2 disconverge/2 converge>" "<a'm9'8 f'7sus2'10 f'm6'4>")
+    |+| gain 1.3
+     +  up 3
+    --  # bpf 200
+    --  # binshift (osc64 12 0.1 0.8 sine)
+    --  # scram (slow 16 $ range 0.3 0.4 $ sine)
+
+    d2 
+    -- $ rev
+    $ slow "<2.1>"
+    -- $ degradeBy 0.2
+    -- $ every 4 (|- n "2")
+    -- $ every 10 (|- n "4")
+    $ plyWith "<22 18 15 8 20 23 32>" ((|* gain 0.81))
+    -- $ struct bizy
+    $ s "[swan]"
+    # atrl 0.12 0.83
+    # nl
+    # cps ("<4.05 3.96 2.1 [4 3] 4.1 4.03 2.1 4 4 2 2 2 >" 
+          -- * (slow 17.1 $ range 0.3 1 $ sine)
+          )
+    -- # speed (-1)
+    -- + n (arp "<[updown ~] [up pinkyup]/2 disconverge/2 converge>" "<a'm9'8 f'7sus2'10 f'm6'4>")
+    -- |+| gain 1.3
+     +  up 3
+    --  # bpf 200
+    --  # binshift (osc64 12 0.1 0.8 sine)
+    --  # scram (slow 16 $ range 0.3 0.4 $ sine)
+
+    
+    hush
+    
+

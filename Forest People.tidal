@@ -1,0 +1,129 @@
+--1. import stuff
+import Sound.Tidal.MIDI.Context
+
+--2. list MIDI devices
+
+displayOutputDevices >>= putStrLn
+
+--3. connect to the MIDI devices
+
+import Sound.Tidal.MIDI.Context
+
+devices <- midiDevices
+
+--m1 <- midiStream devices "mio2 USB 1" 1 synthController
+
+m1 <- midiStream devices "micro lite: Port 5" 1 synthController
+
+m2 <- midiStream devices "micro lite: Port 5" 2 synthController
+
+m3 <- midiStream devices "micro lite: Port 5" 3 synthController
+
+--bass drum perfourmer
+
+bps (140/120)
+
+cps(-1)
+
+m1 $ n "-12"
+
+m1 $ n "-12 [~ -12 ] ~ ~"
+
+d1 $ s "[[~ hh:7]*4]"
+ # release "0.3"
+
+bps (100/120)
+
+cps (-1)
+
+--light bulb 0210
+
+
+bps (120/120)
+
+d1
+  $ jux (off 0.2 (|+| speed (fast 2 $ rand )).(|+|hpf (sine1*2000 + 8000)))
+  $ chop (choose [2,2,2,2,3,1,4,4,5])
+  $ slow "[5 2 6 10 11 30]"
+  $ loopAt "[1.2 1.5 1.7 1 0.7 1.22 1.45 1.5 1.9]"
+  $ spaceOut ( (map (1/) [1,1.1..8] ) ++ (map (1/) [8,7.5..1]))
+  $ sound "over:1*10"
+  |=| hpf (sine1*4000 + 8000 )
+  # room 0.3
+  # release rand
+  # cut "0"
+  # gain 1.3
+  -- # delay (discretise (1/3) $ scale 0.5 1 $ slow 2 rand )
+  -- # delaytime (discretise (1/3) $ scale 0.001 0.1 $ slow 3 rand )
+  -- # delayfeedback (discretise (1/3) $ scale 0.5 0.99 $ slow 5 rand )
+
+--neon
+bps (140/120)
+
+d1
+  -- $ slow 1.5
+  $ jux (off 0.5 (|+| speed (fast 4 $ rand )).(|+|hpf (sine1*1000 + 4000)))
+  -- $ chop (choose [2,2,2,2,3,1,4,4,5])
+  -- $ slow "[5 2 6 10 11 30]"
+  -- $ loopAt "[1.2 1.5 1.7 1 0.7 1.22 1.45 1.5 1.9]"
+  $ spaceOut ( (map (1/) [1,1.1..8] ) ++ (map (1/) [8,7.5..1]))
+  $ n (irand 2)
+  # sound "[neon:1 neon [neon:3 neon:4] ~]"
+  -- |=| hpf (sine1*1000 + 2000 )
+  -- # room 0.3
+  -- # release rand
+  # cut "0"
+  # gain "1.4"
+  -- # delay (discretise (1/3) $ scale 0.5 0.7 $ slow 2 rand )
+  -- # delaytime (discretise (1/3) $ scale 0.001 0.1 $ slow 3 rand )
+  -- # delayfeedback (discretise (1/3) $ scale 0.5 0.6 $ slow 5 rand )
+
+
+
+hush
+
+
+-- aquaphone
+d3
+   -- $ jux (0.25 <~)
+   $ slow 4
+   $ every 1 (((|+| gain (slow 4 $ (sine1*0.3 +0.25))).(|+|cutoff (sine1*1000 + 5000)).(|+|speed "[-1.2,0.8]")))
+   -- $ every 2 (|=| accelerate (slow 2 $sine1*0.5))
+   $ chop 2
+   $ loopAt ( choose [1])
+   $ density "2"
+   $ spaceOut ( (map (1/) [1,1.1..8] ) ++ (map (1/) [8,7.5..1]))
+   $ n (irand 10)
+   # s "[aqua,tink,sing5]"
+   -- |+| sustain (choose [0.1,0.3,0.4,0.5,0.2])
+   -- |+| sustain "0.7"
+   # cut "0"
+   |+| gain "0.8"
+   |+| n "1"
+
+hush
+
+bps(120/120)
+
+d2 $ sound "bd hh!!"
+
+d3
+   -- $ jux (0.25 <~)
+   -- $ slow 2
+   -- $ every 1 (((|+| gain (slow 4 $ (sine1*0.3 +0.2))).(|+|cutoff (sine1*1000 + 3500)).(|+|speed "[-1.2,0.8]")))
+   -- $ every 2 (|=| accelerate (slow 2 $sine1*0.5))
+   -- $ loopAt ( choose [1.5])
+   $ every 2 ((|+|speed "2").(|+|pan (choose[1,0])))
+   -- $ striate' 20 0.5
+   -- $ density "4"
+   $ spaceOut ( (map (1/) [1,1.8..8] ) ++ (map (1/) [8,7.2..1]))
+   -- $ spaceOut [1,0.2]
+  -- $ n (irand 1)
+   $ s "[arpy]"
+   -- |+| sustain (choose [0.1,0.3,0.4,0.5,0.2])
+   -- |+| sustain "0.7"
+   # cut "1"
+   |+| gain "0.8"
+   |+| n "1"
+
+hush

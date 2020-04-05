@@ -1,0 +1,15 @@
+--in SC
+--here you can see the effect order:
+~dirt.modules;
+
+-- OPTIONAL: you can reorder the effects, if you want e.g. the lpf to come after the delay:
+~dirt.orderModules(['spectral-delay', 'hpf', 'klm']);
+
+
+let tsdelay = pF "tsdelay"
+    xsdelay = pI "xsdelay"
+
+
+    d1 $ sound "can*4" # tsdelay "0 0.25 0.5 0.75 1" # xsdelay "3 124 3 12 62 2"
+
+    hush

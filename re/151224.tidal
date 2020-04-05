@@ -1,0 +1,35 @@
+d1
+  $ juxBy 0.3 (slow 10)
+  $ weave' 14 (striate 32 $ sound "tzu" |=|lpf 2000)
+  [
+  ((|+| speed (efull 2 9  "1" "-0.4")).(|=| pan (efull 2 9  "0.3" "0.7"))).(|=|lpf 1000)
+  -- ,(|=| accelerate (efull 7 8  "~" "0.4")).(loopAt 10)
+  -- ,(|=| release (scale 0.2 0.08(slow 4 $ sine1))).(|=|lpf 7000)
+  -- ,((|=|attack (scale 0.3 0.8 (slow 6 $ sine1))).(|=|lpf 1000))
+  -- ,((|=| bsin 14 0.1 0.9).(|=|lpf 1000))
+  -- ,(|=|lpf 1000)
+  ]
+  -- # release 0.5
+  -- |=|nudge " [1 2 3 4]/3"
+
+d2
+  $ fast 10
+  -- $ juxBy 0.3 (slow 10)
+  $ loopAt 10
+  $ weave' 14 (striate 32 $ sound "tzu" |=|lpf 2000)
+  [
+  ((|+| speed (efull 2 9  "1" "-0.4")).(|=| pan (efull 2 9  "0.3" "0.7"))).(|=|lpf 1000)
+  -- ,(|=| accelerate (efull 7 8  "~" "0.4")).(loopAt 10)
+  -- ,(|=| release (scale 0.2 0.08(slow 4 $ sine1))).(|=|lpf 7000)
+  -- ,((|=|attack (scale 0.3 0.8 (slow 6 $ sine1))).(|=|lpf 1000))
+  -- ,((|=| bsin 14 0.1 0.9).(|=|lpf 1000))
+  -- ,(|=|lpf 1000)
+  ]
+  # unit "c"
+  -- # release 0.5
+  -- |=|nudge
+
+
+  d1 $ weave' 3 (striate 64 $ sound "tzu") [fast 2, (# speed "0.5"), chop 16]
+
+  hush

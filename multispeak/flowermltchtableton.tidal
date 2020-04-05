@@ -1,0 +1,11 @@
+d1 $ s "kins1*4" # orbit 3 
+
+d2 $ s "kins2*2"
+
+d3 $ s "b01*1"
+
+d4 $ s "mp03:3*1"
+
+d5 $ s "pa1:2*1"
+
+hush

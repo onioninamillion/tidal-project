@@ -1,0 +1,22 @@
+
+--tt acapella 40
+d1
+-- $ loopAt 1
+$ plyWith 16 ((|* gain (32/36)).(|* begin (35/36)).(scramble 4).(linger 0.66))
+-- $ loopAt (fast 4 (choose[0.75,1..1.75]))
+-- $ slice 8 "0 1 2 3 4 5 [6 7] 3"
+$ sound "[faketrue]"
+-- # begin (slow 3 (range 0.02 0.95 $sine))
+-- # release (slow 24 (range 1.4 3 $sine))
+-- # attack (slow 14.2 (range 0.12 0.4 $sine))
+-- # delayfb (segment 36 (slow 13 (range 0.7 0.5 $sine)))
+-- # delayt (segment 12 (slow 15.3 (range 0.01 1.7 $sine)))
+-- # delay (segment 16 (slow 10 (range 0.1 0.3 $sine)))
+-- # lpf (slow 13.4 (range 8000 2000 $ sine))
+# n2
+# bpm (126*2)
+
+hush
+
+
+d1 $ sound "feelsp"

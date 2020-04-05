@@ -1,0 +1,283 @@
+hush
+
+--harmony exp
+do 
+  let dis p = discretise (1/4) $ p
+      vary = 0.35     
+      speeds = slow (discretise 1 $ choose [1,1,1,1,2]) $ degradeBy 0.6 $ shift $ s (randcat( 
+                  (replicate 5 "re:1*1") 
+                  ++ (replicate 5 "re:1*2") 
+                  ++ (replicate 5 "re:1*3") 
+                  ++ (replicate 5 "re:1*4") 
+                  ++ (replicate 10 "re:1*5") 
+                  ++ (replicate 10 "re:1*6") 
+                  ++ (replicate 7 "re:1*7") 
+                  ++ (replicate 8 "re:1*8") 
+                  ++ (replicate 10 "re:1*10") 
+                  -- ++ (replicate 10 "re:1*12") 
+                  -- ++ (replicate 10 "re:1*14") 
+                  -- ++ (replicate 10 "re:1*16") 
+                  -- ++ (replicate 10 "re:1*18") 
+                  -- ++ (replicate 10 "re:1*20") 
+              ))
+  p "f2" $ sometimesBy vary  (# gain 0.5) $ shift $ speeds 
+          # s "re:1"
+          + bsaw 11 0.1 0.8 160
+          + rsin 15 2.4 0.8 24
+          + attsin 13 0.4 0.8 16
+          -- + speed ( squeezeJoin ( range 2 (-2) $ const saw <$> ("1(3,8)" :: Pattern Int ))) 
+          # cut 1
+-- # cutoff (trigger (rangex 15000 200 (inside "<1 2>*5" (foldEvery [3,4,5,6] (("[1 2 1]"/8) <~)) 
+
+  hush
+
+
+  do
+    let dis p = discretise (1/4) $ p
+        vary = 0.6
+        speeds = slow (discretise 1 $ choose [1,1,1,1,2]) $ degradeBy 0.6 $ shift $ s (randcat( 
+                    (replicate 5 "midi*1") 
+                    ++ (replicate 5 "midi*2") 
+                    ++ (replicate 5 "midi*3") 
+                    ++ (replicate 5 "midi*4") 
+                    ++ (replicate 10 "midi*5") 
+                    ++ (replicate 10 "midi*6") 
+                    ++ (replicate 7 "midi*7") 
+                    ++ (replicate 8 "midi*8") 
+                    ++ (replicate 10 "midi*10") 
+                    ++ (replicate 10 "midi*12") 
+                    ++ (replicate 10 "midi*14") 
+                    ++ (replicate 10 "midi*16") 
+                    ++ (replicate 10 "midi*18") 
+                    ++ (replicate 10 "midi*20") 
+                ))
+    d1 $ sometimesBy vary (# pan (range 0.4 0.6 $ rand )) 
+      --  $ striate' 100 0.3 
+       $ shift 
+      --  $ loopAt (run 4)
+       $ speeds 
+       # s "re:1" 
+       + bsaw 11 0.1 0.9 160 
+       + rsaw 15 2.4 1.8 24 
+       + attsaw 12 0.4 0.8 20
+      --  # cps (slow 10 $ range 0.5 3 $ saw)
+      -- |+ n (slow 100 $ run 100) 
+      --  + speed ( squeezeJoin ( range 2 (-2) $ const saw <$> ("1(3,8)" :: Pattern Int ))) 
+      --  # cut 1
+
+
+
+ 
+do
+  let 
+      a = 20
+      vcv = (segment 16 $ range 0 a $ saw) 
+      fluid p = ((+ bsaw 3 0.1 0.9 13).( + rsin 15 4 1.8 24 ).(+ attsin 12 0.4 0.8 16 )) p
+  d1
+    -- $ fluid 
+    $ degradeBy 0.8
+    $ layer [striate' 100 "[0.3 8]"  , rev , degradeBy 0.5, (# speed "2")]
+    $ stack [
+        s "re5" + speed ((perlin + 0.2 )) # shrand 12
+        ,
+        s "midi (3,8)" + ccn "60 1 2 3" + ccv (slow 4 $ vcv )
+    ] 
+    # n (irand 1000) 
+  --  + speed ( squeezeJoin ( range 2 (-2) $ const saw <$> ("1(3,8,<2,5>)" :: Pattern Int ))) 
+  --  # cut 1     
+
+  hush
+
+
+  d2 
+    $ fast 2 
+    $ stack [ 
+              s "midi" # ccn 60 + ccv (range 0 127 $ saw)
+              ,
+              s "arpy" + speed (segment 10  $ range 0 1 $ saw)
+            ]
+
+hush
+
+
+  d1 $ sound "bd*32" # speed (perlin + 0.5)
+
+  let trigger osc string = ( squeezeJoin $ const osc <$> (string :: Pattern Int) )
+
+
+
+d1 $ s "cp*16" + gain ( squeezeJoin $ const saw <$> ("1(3,10)" :: Pattern Int) )
+
+hush
+
+do 
+  let mod p = spaceOut [1] $ p 
+  let repat = "[[re1,re2,re3,re4,re5,re6,re7,re8] ~ ~ ~ ~ ~ [~ re1,re2, ~ re3,re4,re5,re6,re7,re8] ~ ~ ~]"
+  let recut = "[0 ~ ~ ~ ~ ~ 1 ~ ~ ~]"
+  -- let reacc = "[[0.5] ~ ~ ~ ~ ~ -2 ~ ~ ~]"
+  let dpat  = "[byd:2 ~ ~ ~ ~ ~ <cp:1,~,~> ~ ~ ~]"
+  let rerel = "[0 0 0 0 ~ 0 0 0 0 ~ 0]"
+  let cc = "[midi ~ ~ ~ ~ ~ midi  ~ ~ ~]"
+  let trigger osc string = ( squeezeJoin $ const osc <$> (string :: Pattern Int) )
+  p "re"
+    $ whenmod 12 5 (+ ssaw 1 0 0.95 (slow 42 $ smooth "10 4 15"))
+    $ layer [degradeBy 0.3 , loopAt 2]
+    $ mod 
+    $ s repat
+    # n ((slow 1000 $ run 1000)) 
+    # cut recut
+    # unit "s"
+    -- # accelerate reacc
+    + rsaw 1 4 0.4 21
+    -- + release rerel
+    # gain 1.2
+  p "drums" 
+    --  $ every 5 (iter 4)
+    --  $ every 6 (rev)
+     $ mod 
+     $ stack [
+              -- sometimes (stutWith 2 (0.625*2) id )$
+              s dpat # gain 1.2
+              ,  
+              -- rot "<1,1,0>" $
+              -- slow "<3,2>" $  
+              every 5 ((degrade).(juxBy "0.6 0.7" (rev)).(stutWith 3 (0.1625*2) (|* speed (segment 16 $ range 1 2 $ saw)) )) $ 
+              s "house(3,<8>,<2,5>)"
+              # legato 0.1
+              -- # n (slow 2 $ choose ([-12,2,3,5,6,7,8,10,12]))
+              ,
+              every 3 (fast 3) $
+              every 7 (fast 3.4) $
+              s "hh27*2" 
+              # gain  (trigger (rangex 0.5 2 (inside "<1 2>*5" (foldEvery [3,4,5,6] (("[1 2 1]"/8) <~)) $ slow "<1 4 2 0.5>*8" $ saw)) "1 _ _ 1 _ _ 1 _")
+              -- # speed (fast 4 )
+             ]
+  p "cc" 
+     $ stack [
+                mod $ s cc # midichan 1
+              , mod $ s cc # ccn 0 + ccv (slow 4 $ segment 100 $ range 0 127 $ saw) 
+              , mod $ s cc # ccn 1 + ccv (slow 5 $ segment 100 $ range 0 100 $ saw) 
+              , mod $ s cc # ccn 2 + ccv (slow 5 $ segment 100 $ range 127 0 $ saw) 
+              , mod $ s cc # ccn 3 + ccv "[60 ~ ~ ~ ~ ~  20 ~ ~ ~]"
+             ]
+             # midichan 2
+     # cps "<0.6,0.8,1.3,0.5,1,0.7,0.6>"
+
+    do 
+      let mod p = spaceOut [1] $ p 
+      -- let mod p = spaceOut [1,1.1,0.9,0.95,1.7,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.8] $ p
+      let repat = "[[re1,re2,re3,re4,re5,re6,re7,re8] ~ ~ ~ ~ ~ [~ re1,re2, ~ re3,re4,re5,re6,re7,re8] ~ ~ ~]"
+      let recut = "[0 ~ ~ ~ ~ ~ 1 ~ ~ ~]"
+      let reacc = "[[0.5] ~ ~ ~ ~ ~ -2 ~ ~ ~]"
+      let dpat  = "[byd:2 ~ ~ ~ ~ ~ <cp:1,~,cp:1> ~ ~ ~]"
+      let rerel = "[0 0 0 0 ~ 0 0 0 0 ~ 0]"
+      let cc = "[midi ~ ~ ~ ~ ~ midi ~ ~ ~]"
+      let trigger osc string = ( squeezeJoin $ const osc <$> (string :: Pattern Int) )
+      p "re"
+        -- $ rev 
+        -- $ whenmod 12 5 (+ ssaw 1 0 0.95 (slow 42 $ smooth "10 4 15"))
+        $ layer [degradeBy 0.4 , loopAt 3]
+        $ mod 
+        $ s repat
+        # n ((slow 10 $ run 10)) + "[10 20 30 40 50 60 70 80 90 ]/9"
+        # cut recut
+        # unit "c "
+        -- # accelerate reacc
+        + rsaw 1 4 0.1 18
+        -- + release rerel
+        # gain 0.8
+      p "drums" 
+        --  $ every 5 (iter 4)
+        --  $ every 6 (rev)
+         $ mod 
+         $ stack [
+                  -- sometimes (stutWith 3 (0.625*4) id )$
+                  s dpat
+                  ,  
+                  -- rot "<1,1,0>" $
+                  -- slow "<3,2>" $  
+                  -- every 5 ((degrade).(juxBy "0.6 0.7" (rev)).(stutWith 3 (0.1625*2) (|* speed (segment 16 $ range 1 2 $ saw)) )) $ 
+                  s "midi(3,<8>,<2,5>)"
+                  # legato 0.01
+                  -- # n (slow 2 $ choose ([-12,2,3,5,6,7,8,10,12]))
+                  ,
+                  every 3 (fast 3) $
+                  every 7 (fast 3.4) $
+                  s "hh27*2" 
+                  # gain  (trigger (rangex 0.5 2 (inside "<1 2>*5" (foldEvery [3,4,5,6] (("[1 2 1]"/8) <~)) $ slow "<1 4 2 0.5>*8" $ saw)) "1 _ _ 1 _ _ 1 _")
+                  -- # speed (fast 4 )
+                  ,
+                  mod
+                  $ s "midi ~ ~ ~ ~ ~ midi ~ ~ ~"
+                  # midichan 1
+                  -- # n "" 
+                  , 
+                  mod
+                  $ s "midi ~ ~ ~ ~ ~ midi ~ ~ ~"
+                  # ccn 0 + ccv (segment 10 $ range 0 127 $ saw) 
+                  # ccn 1 + ccv (segment 10 $ range 0 127 $ saw) 
+                  # midichan 2
+                 ]
+      p "cc" 
+         $ stack [
+                  mod $ s cc
+                  # midichan 1
+                  -- # n "" 
+                  , 
+                  mod
+                  $ s cc
+                  # ccn 0 + ccv (segment 10 $ range 0 127 $ saw) 
+                  # ccn 1 + ccv (segment 10 $ range 0 127 $ saw) 
+                  # midichan 2
+                 ]
+        --  # speed ( s/egment 16 $ slow 5 (range (-1) 1 $ rand))
+        --  # unit "c r"
+         # cps "<0.7,0.8,1.3,0.5,1,0.7,0.58>"
+        --  + cps (segment 50 $ slow 5 $ range 0 0.3 $ saw)
+    
+
+
+
+    hush
+
+    let trigger osc string = ( squeezeJoin $ const osc <$> (string :: Pattern Int) )
+
+    d1
+    $ sound "cp*<8 16 4 <8 16 8 32>*4>*1.5"
+    # cutoff (trigger (rangex 15000 200 (inside "<1 2>*5" (foldEvery [3,4,5,6] (("[1 2 1]"/8) <~))
+    $ slow "<1 4 2 0.5>*8" $ saw)) "1 _ _ 1 _ _ 1 _")
+    # resonance ("[8 1 4 1 2 1]*4%6"/16)
+    # release (range 0.05 0.5 (slow 2 $ saw))
+
+
+  hush
+
+  do
+    let spat = "[<0> ~ ~ ~ ~ ~ <1> ~ ~ ~]"
+    let fpat = "[ 0  ~ ~ ~ ~ ~ 127 ~ ~ ~]"
+   -- let tpat = "[0.1   ~ ~ ~ ~ ~ 0.9 ~ ~ ~]"
+    let dpat = "[[byd:0]~ ~ ~ byd:0? ~ ~ <byd:3*1> ~ ~ ~]"
+    -- let mod p = spaceOut [1.2] $ p
+    let mod p = spaceOut [1,1.1,0.9,0.95,1.7,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.8] $ p
+    d1 $ mod 
+            $ layer [id, ((slow 100).(striate 100)), loopAt 0.2]
+            $ sound "[re1 ~,re2 ~,re3 ~,re4 ~,re5 ~,re6 ~,re7 ~,re8 ~]"
+            # n (slow 10000 $ run 10000)
+            + ssaw 1 0 0.95 (slow 20 $ smooth "10 4 15")
+            # cut 0
+
+
+hush
+
+d1
+  $ degradeBy 0.1
+  $ layer [ ((slow 10).(striate' 150 0.17)), loopAt 5]
+  $ sound "[re1(3,8),re5(5,17)]"
+  # n (slow 10000 $ run 10000)
+  + ssaw 1 1 30 (iter 5 $ smooth "[100 4 30 21]/1")
+  # legato (slow 10 (choose [0.3,0.2,3,1,5]))
+  # cut 0
+  # cps (slow 4 $ rangex 0.5 3 $ saw)
+
+  hush
+

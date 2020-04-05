@@ -1,0 +1,58 @@
+d1
+-- $ degradeBy 0.4
+$ plyWith 17 (|* gain 0.91).(|+ pan 2.5).(|+ release 0.13).(|+ attack 0.4)
+$ s "box01*3"
+|+ (fast 4 $ degradeBy 0.2 $ nl)
+# cps ("<1 0.75 1.35 0.75 1.2>" * (osc64 10 0.4 0.7 saw))
+# begin (osc64 12 0 0.2 sine)
+# speed "1 2 -0.5"
+
+
+hush
+
+
+
+d4
+$ layer [id,(#accelerate 1.5),(#accelerate (-0.5))]
+$ s "box01*16"
+# speed (slow 12 $ smooth $ "<1 2 -4> 0  0 2")
+# cps (slow 1 $ segment 16 $ range 0.25 1 $ saw)
+# nr
+
+hush
+
+
+d2
+-- $ layer [id, (# accelerate 0.25 ).(# lpf (osc64 12 100 500 13))]
+$ s "box01*16"
+|+ n (slow 12 $ degradeBy 0 $ "0 .. 24")
+|+ speed (degradeBy 0.4 $ slow 2.5 $  "<7 12 -5> 0 0 <0 7>")
+# cps (slow 14 $ segment 16 $ range 0.5 2 $ saw)
+
+
+d3
+-- $ layer [id, (# accelerate 0.25 ).(# lpf (osc64 12 100 500 13))]
+$ s "box01*16"
+|+ n (slow 12 $ degradeBy 0 $ "0 .. 24")
+|+ speed (degradeBy 0.4 $ slow 2.5 $ smooth "<7 12 -5> 0 0 <0 7>")
+# cps (slow 14 $ segment 16 $ range 0.5 2 $ saw)
+
+
+hush
+
+--專櫃
+
+d1
+$ sometimes (hurry 0.2)
+$ jux (loopAt 0.3 . degrade)
+$ juxBy 0.7 (loopAt 0.6 . degrade . loopAt 2 . rev)
+$ sound (segment 2 (wchoose [("box02",0.9)])) 
++| n (slow 12 $ degradeBy 0.3 $ "0 .. 12")
+# cps ("<1 0.75 1.25 0.75 1.25>" * (osc64 15 0.5 1 sine))
+# room (segment 1 (wchoose [(0.3,0.5),(0.7,0.2)]))
+# size 0.4
+# squiz (-2)
+# lpf (wchoose [(4300,0.2),(1800,0.25),(2000,0.2)]) 
+-- # cps (slow 40 $ range 1 0.4 $ sine)
+
+hush

@@ -1,0 +1,42 @@
+
+setcps (140/120/1)
+
+-- used a MIDI controller for a lot of manual modulation on this.
+
+do
+    let spat = "[0.01 ~ ~ ~ ~ ~ <0.4> ~ ~ ~]"
+    let fpat = "[0   ~ ~ ~ ~ ~ 127 ~ ~ ~]"
+    -- let tpat = "[0.1   ~ ~ ~ ~ ~ 0.9 ~ ~ ~]"
+    let dpat = "[bd:4*1   ~ ~ ~ ~ ~ <808:3*1 808:3*1 808:3*1 > ~ ~ ~]"
+    let mod p = spaceOut [1.2] $ p
+    -- let mod p = spaceOut [1,1.1,0.9,0.95,1.7,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.8] $ p
+    -- p "yes" $ mod $ begin spat # s "yes" # cut 0 + n "[0 1]/4" + accelerate (segment 4 (choose [0.125,0.5..2])) - accelerate (slow 10.5 $ segment 1 (choose [0.1,0.5..1])) + tremolorate (slow (segment 10 $ range 1.5 6 $ sine) $ segment 8 $ range 3 20 $saw) + tremolodepth 0.6 + gain 1.5 + begin (slow (segment 1 $ range 0.5 4 $ rand) $ degradeBy 0.1 $ segment "<1200 1300 1400 1050>" $ range 0.01 0.9 $ saw) + release "1.5"
+    p "drumpat" $ mod $ s dpat # gain 3 - cps "0.4" + cps "<1 1.1 0.9 0.95 1.3 1.25 0.8 1.65 1 0.7 0.823 1.5 1 2 1.8>"  # coarse "1"
+
+    hush
+
+do
+    let spat = "[<0> ~ ~ ~ ~ ~ <1> ~ ~ ~]"
+    let fpat = "[ 0  ~ ~ ~ ~ ~ 127 ~ ~ ~]"
+    -- let tpat = "[0.1   ~ ~ ~ ~ ~ 0.9 ~ ~ ~]"
+    let dpat = "[[byd:0]~ ~ ~ byd:0? ~ ~ <cp:3*1> ~ ~ ~]"
+    -- let mod p = spaceOut [1.2] $ p
+    let mod p = spaceOut [1,1.1,0.9,0.95,1.7,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.8] $ p
+    p "yes" $mod$ n spat # s "[gd]" # cut 0 + tremolorate (slow (segment 10 $ range 1.5 6 $ sine) $ segment 8 $ range 1 20 $ saw) + tremolodepth 0.8 + gain 0.6 + begin (slow (segment 10 $ range 30 10 $ rand) $ segment "<1200 1500 1000>" $ range 0.001 0.999 $ saw ) + release "4"
+    p "drumpat" $mod$ s dpat # gain 0.8
+
+
+
+
+
+hush
+
+    d2
+      -- $ fast 2 $ degradeBy 0.1
+      $  stack [
+      degradeBy 0.2
+      $stutWith 2 (0.625) (stutWith 12 (0.0625)(|* gain (slow 4 $ range 1 1.5 $ sine )))
+      $ s "[~ gd:2]" # gain 1.2
+                               ]
+
+                hush

@@ -1,0 +1,508 @@
+p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+
+once $ midicmd "stop" # s "midi"
+
+p "midictl" $ midicmd "start/4" # s "midi"
+
+p "midictl" $ silence
+
+
+do 
+    let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+        kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+        kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+        kaivomod        = ccn 25 # s "midi"  # midichan 1
+        kaivox          = ccn 33 # s "midi"  # midichan 1
+        kaivonote       =          s "midi"  # midichan 1 
+        vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+        vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+        vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+        modd p =  degradeBy 0.8 $ segment 3 $ slow 12 $ p 
+    p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+    d1 
+        -- $ chunk 5 ((linger 0.8).(loopAt 2))
+        $ slow "<2 1.28 2.24 3.33>"
+        -- $ every 4 ((+ note (scale "major" "1 .. 5")))
+        $ struct "t(3,<16>,<2 3>)"
+        $ stack [
+                s "midi" + note (scale "melodicMinorDesc" "-25 .. 45"),
+                kaivoseqrate + ccv (slow 10 $ "{82 80 ~ 81 60}%13"),
+                modd $ kaivoseqstep + ccv "{90 40 20 14 70}%16",
+                modd $ kaivorespitch + ccv "{20 [17 4] ~ 5 3}%16" ,
+                modd $ kaivomod + ccv "{2 [127 4] ~ 5 3}%16" ,
+                kaivox + ccv (struct "t ~ " $ smooth (choose [51,55,74,66])),
+                modd $ vhdelaypitch + ccv (range 1 127 $ trigger saw "1 _ _ 1 _ 1 _ _" ) ,
+                modd $ (0.01<~) $ vhdelaydiffamt + ccv (range 127 14 $ trigger rand "1 _ _ 1 _ 1 _ _" ) # shrand 119,
+                (0.1~>) $ vhdelaytime + ccv (range 127 1 $ trigger rand "1 _ _ 1 _ 1 _ _" )
+                -- , modd $ s "mf" + nl # cut 1 # gain 2 + bsaw 1 0 0.9 16 # lpf (range 200 1000 $ rand)
+                ]
+        -- # cps 1
+        -- # cps (segment 1 $ choose [0.52,0.67,0.77,1.12,2])   
+        # legato "1.15"
+      
+         
+scaleList
+
+hush
+
+d1 $ ccn 55 # s "midi"  # midichan 1
+
+vhdelaypitch   =  ccn 55 # s "midi"  # midichan 1
+vhdelaydiffamt =  ccn 56 # s "midi"  # midichan 1
+vhdelaytime    =  ccn 57 # s "midi"  # midichan 1
+
+---paramorph4
+
+do 
+    let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+        kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+        kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+        kaivomod        = ccn 25 # s "midi"  # midichan 1
+        kaivox          = ccn 33 # s "midi"  # midichan 1
+        kaivonote       =          s "midi"  # midichan 1 
+        vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+        vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+        vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+        modd p = slow 5 $ degradeBy 0.4 $ segment 16 $ p 
+        cpatt = rev $ otrigger saw "1 _ _ 1 _ 1 _ _" 
+    p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+    d1 
+        -- $ slow 3
+        $ stack [
+                s "midi" |> note (scale "melodicMinorDesc" "5 .. -45") >|  trigger rand "1 _ _ 1 _ 1 _ _" ,
+                modd $ kaivoseqrate     + ccv (range 1 55 $ cpatt),
+                modd $ kaivoseqstep     + ccv (segment "<4 5>" $ range 30 120 $ cpatt),
+                modd $ kaivorespitch    + ccv (range 1 25 $ slow 5 $ segment 5 $ cpatt),
+                modd $ kaivomod         + ccv (range 41 50 $ cpatt),
+                modd $ vhdelaypitch     + ccv (range  44  "<99 20 0 100 70>" $ trigger sine "1 _ _ 1 _ 1 _ _" ) ,
+                modd $ (0.01<~) $ vhdelaydiffamt + ccv (range 1 12 $ trigger rand "1 _ _ 1 _ 1 _ _" ) # shrand 119,
+                (0.15~>) $ vhdelaytime + ccv (range 5 10 $ trigger rand "1 _ _ 1 _ 1 _ _" ) 
+                -- s "~ cp" # gain 1.2
+                -- , modd $ s "mf" + nl # cut 1 # gain 2 + bsaw 1 0 0.9 16 # lpf (range 200 1000 $ rand)
+                ]
+        -- # cps 1
+        -- # cps (segment 1 $ choose [0.82,0.67,0.77,1.12])   
+        # legato "1.15"
+
+        hush
+
+---paramorph5
+
+do 
+    let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+        kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+        kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+        kaivomod        = ccn 25 # s "midi"  # midichan 1
+        kaivox          = ccn 33 # s "midi"  # midichan 1
+        kaivoy          = ccn 38 # s "midi"  # midichan 1
+        vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+        vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+        vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+        modd p          = slow 3 $ degradeBy 0 $ segment 120 $ p 
+        beatstruct      = struct "[~ t] t(3,<16 4 8>) t(3,8,<2 1>) t(2,<8 2 5>) "
+        cpatt = struct "t(3,8)" $ otrigger saw "1 _ _ 1 _ 1 _ _ " 
+    p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+    d1 
+        -- $ slow 3
+        $ stack [
+                every 4 (stutWith 4 0.125 (|* legato 0.16 )) $
+                whenmod 15 4 (slow 2) $
+                every 5 (iter 4) $
+                beatstruct 
+                $ s "midi"
+                # release 1.25
+            --    |+ note (range 20 (-12) $ cpatt)
+               |+ note (choose [20,0,50])  
+                ,
+                g $
+                -- brak $ 
+                -- striate "<12 4 4 5 2 3 3 2 12 4 6 2 2 4 4 10 8>" $
+                chunk 8 (stutWith 10 0.16 ((# speed (range (-1) (-0.25) $ cpatt)))) $
+                whenmod 15 4 (slow 2) $
+                beatstruct $ s "byd:2" # gain 1.2
+                # legato "4.15"
+                # nl
+                ,
+                -- g $
+                kaivoy # ccv (osc64 12 0 127 rand) ,
+                kaivox + ccv (osc64 0.6 51 60 saw) ,
+                -- modd $ kaivoseqrate     + ccv "29",
+                modd $ kaivoseqstep     + ccv (segment "<4 5>" $ range 30 120 $ cpatt),
+                -- modd $ kaivorespitch    + ccv (range 1 25 $ slow 5.1 $ segment 20 $ cpatt),
+                modd $ kaivomod         + ccv (range 41 50 $ cpatt),
+                modd $ vhdelaypitch     + ccv (range  64  "<99 120 0 100 70>" $ otrigger sine "1 _ _ 1 _ 1 _ _" ) ,
+                modd $ degradeBy 0 $ ((choose[0.0645,0.0123]) ~>) $ vhdelaypitch  + ccv (range  "<99 120 0 100 70>" 62 $ otrigger sine "1 _ _ 1 _ 1 _ _" ) ,
+                modd $ (0.01<~) $ vhdelaydiffamt + ccv (range 1 12 $ trigger rand "1 _ _ 1 _ 1 _ _" ) # shrand 119
+                ,modd $ vhdelaytime + ccv (range 3 0 $ cpatt) 
+                ]
+        # cps (80/120)
+        -- # cps (segment 1 $ choose [0.82,0.67,0.77,1.12])   
+
+        hush
+    
+
+        hush
+
+
+
+d1 $ setmd 1 38
+
+hush
+
+
+---paramorph 6 
+
+
+a="[t*8,[t ~]*2 ~ [~ t*2] ~ , ~ [t ~ ~ t][~ t ~ ~ ][t ~ ~ t]]"
+b="[hh!!!! hh:7 hh!,[bd ~]*2 ~ [~ [bd ~]] ~ , ~ [sn ~ ~ sn][~ sn ~ ~ ][~ ~ sn ~]]"
+c="[hh!!!! hh:14 hh!,[~ bd*2] ~ [~ [bd ~]] ~ , [~ sn ~ ~ ][ sn ~ ~ sn ][~ sn ~ ~][~ ~ sn ~]]"
+
+
+do 
+    let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+        kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+        kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+        kaivomod        = ccn 25 # s "midi"  # midichan 1
+        kaivox          = ccn 33 # s "midi"  # midichan 1
+        kaivoy          = ccn 38 # s "midi"  # midichan 1
+        vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+        vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+        vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+        modd p          = slow 3 $ degradeBy 0 $ segment 120 $ p 
+        beatstruct      = struct a
+        cpatt = struct "t(3,8,<1 7>)" $ otrigger saw "1 _ _ 1 _ _ _ 1 _ _ " 
+    p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+    d1 
+        -- $ slow 4
+        -- $ degradeBy 0.3
+        $ stack [
+                -- every 4 (stutWith 4 (0.0625*3) (|* legato 0.16 )) $
+                -- whenmod 15 4 (slow 2) $
+                -- bite 9 "0 1 2 ~ 4 [1 3] [8 3]*2 7 2" $
+                beatstruct 
+                $ s "midi"
+                # release 0.25
+                -- +| note (choose [100,40,90])
+                -- |+ note (choose [30,80,40,50])  
+                ,
+                g $
+                brak $ 
+                striate "<12 4 4 5 2 3 3 2 12 4 6 2 2 4 4 10 8>" $
+                chunk 8 (stutWith 10 0.16 ((# speed (range (-1) (-0.25) $ cpatt)))) $
+                whenmod 15 4 (slow 2) $
+                beatstruct $ s "byd:2" # gain 1.2
+                # legato "4.15"
+                # nl
+                ,
+                -- g $
+                 beatstruct $ kaivoy |+ ccv (osc64 0.25 29 120 saw) ,
+                 beatstruct $ kaivox |+ ccv ((slow 20 $ run 20) + 70)
+                --  ,
+                -- modd $ kaivoseqstep     + ccv (segment "<4 5>" $ range 30 120 $ cpatt),
+                -- modd $ kaivorespitch    + ccv (range 1 25 $ slow 5.1 $ segment 20 $ cpatt),
+                -- modd $ kaivomod         + ccv (range 41 50 $ cpatt)
+                ,
+                modd $ vhdelaypitch     + ccv (range  64  "<99 120 0 100 70>" $ otrigger sine "1 _ _ 1 _ 1 _ _" ) 
+                ,
+                modd $ degradeBy 0 $ ((choose[0.0645,0.0123]) ~>) $ vhdelaypitch  + ccv (range  "<99 120 0 100 70>" 62 $ otrigger sine "1 _ _ 1 _ 1 _ _" ) 
+                ,
+                modd $ (0.01<~) $ vhdelaydiffamt + ccv (range 1 12 $ trigger rand "1 _ _ 1 _ 1 _ _" ) # shrand 119
+                ,
+                modd $ vhdelaytime + ccv (range 3 0 $ cpatt) 
+                ]
+        # midichan (choose [0,1,2,1])
+        # cps (60/120)
+        -- # cps (segment 1 $ choose [0.82,0.67,0.77,1.12])   
+
+
+---paramorph amen 
+
+let
+amenh = struct "[t*8]"
+amenb = struct "[[t ~]*2 ~ [~ t*2] ~]"
+amens = struct "[~ [t ~ ~ t][~ t ~ ~ ][t ~ ~ t]]"
+
+
+b="[hh!!!! hh:7 hh!,[bd ~]*2 ~ [~ [bd ~]] ~ , ~ [sn ~ ~ sn][~ sn ~ ~ ][~ ~ sn ~]]"
+c="[hh!!!! hh:14 hh!,[~ bd*2] ~ [~ [bd ~]] ~ , [~ sn ~ ~ ][ sn ~ ~ sn ][~ sn ~ ~][~ ~ sn ~]]"
+
+
+do 
+    let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+        kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+        kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+        kaivomod        = ccn 25 # s "midi"  # midichan 1
+        kaivox          = ccn 33 # s "midi"  # midichan 1
+        kaivoy          = ccn 38 # s "midi"  # midichan 1
+        vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+        vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+        vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+        cpatt = struct "t*24" $ otrigger saw "1 _ _ 1 _ _ _ 1 _ _ " 
+        break a p = rot 1 $ bite a "0 [1 2] 4 3 [1 2] 5 6 7" $ p 
+        amenh p= break 8   $ slow "<2 2 2 [1 2] [2 1] [2 [2 1]]>" $ struct "[t*8]" $ p
+        amenb p= break 16  $ slow "<2 1 1.25 2 1 1 2>"            $ struct "[[t ~]*2 ~ [~ t*2] ~]" $ p
+        amens p= break 12  $ slow "<3 2 2 1 1>"                   $ struct "[~ [t ~ ~ t][~ t ~ ~ ][t ~ ~ t]]" $ p
+        modd p          = slow 1 $ degradeBy 0.1 $ amenb $ p 
+    p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+    d1 
+        -- $ degradeBy 0.3
+        $ stack [
+                -- every 4 (iter 8) $
+                -- every 3  (|- note (scan 20)) $
+                -- every 1  (|+ note (scan 20)) $    
+                -- every 5 (rev) $
+                -- every 6 (stutWith 3 (0.0625*2) (|* legato 0.16 )) $
+                -- whenmod 15 4 (slow 2) $
+                stack [amenb $ midichan ((choose [1,0,1,0])) 
+                      ,amenh $ midichan 1 
+                      ,amens $ midichan 2
+                      ] 
+                # s "midi"
+                ,
+                g $
+                brak $ 
+                -- striate "<15 16 1 19>" $
+                -- chunk 3 (stutWith 10 0.16 ((# speed (range (-1) (-0.25) $ cpatt)))) $
+                amens $ s "cp:1" # gain 1.2
+                # legato "4.15"
+                -- # nl
+                ,
+                -- g $
+                 amenb $ kaivoy |+ ccv (osc64 0.25 29 120 saw) # midichan "[0,1,2]",
+                 amenb $ kaivox |+ ccv ((slow 20 $ run 20) + 50) # midichan "[0,2]"
+                --  ,
+                -- modd $ kaivoseqstep     + ccv (segment "<4 5>" $ range 30 120 $ cpatt),
+                -- modd $ kaivorespitch    + ccv (range 1 25 $ slow 5.1 $ segment 20 $ cpatt),
+                -- modd $ kaivomod         + ccv (range 41 50 $ cpatt)
+                ,
+                modd $ vhdelaypitch + ccv (range  64  "<99 120 0 100 70>" $ otrigger sine "1 _ _ 1 _ 1 _ _" ) 
+                ,
+                modd $ degradeBy 0.4 $ ((choose[0.0645,0.0123]) ~>) $ vhdelaypitch  + ccv (range  "<99 120 0 100 70>" 62 $ otrigger sine "1 _ _ 1 _ 1 _ _" ) 
+                ,
+                modd $ (0.01<~) $ vhdelaydiffamt + ccv (range 1 42 $ trigger rand "1 _ _ 1 _ 1 _ _" ) # shrand 119
+                ,
+                modd $ vhdelaytime + ccv (range 3 0 $ cpatt) 
+                ]
+        -- # midichan (choose [0,1,2,1])
+        # cps (80/120)
+        -- # cps (segment 1 $ choose [0.82,0.67,0.77,1.12])   
+
+:t bite
+
+
+---paramorph amen2 
+
+let
+    amenh = struct "[t*8]"
+    amenb = struct "[[t ~]*2 ~ [~ t*2] ~]"
+    amens = struct "[~ [t ~ ~ t][~ t ~ ~ ][t ~ ~ t]]"
+    
+    
+    b="[hh!!!! hh:7 hh!,[bd ~]*2 ~ [~ [bd ~]] ~ , ~ [sn ~ ~ sn][~ sn ~ ~ ][~ ~ sn ~]]"
+    c="[hh!!!! hh:14 hh!,[~ bd*2] ~ [~ [bd ~]] ~ , [~ sn ~ ~ ][ sn ~ ~ sn ][~ sn ~ ~][~ ~ sn ~]]"
+    
+    
+    do 
+        let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+            kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+            kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+            kaivomod        = ccn 25 # s "midi"  # midichan 1
+            kaivox          = ccn 33 # s "midi"  # midichan 1
+            kaivoy          = ccn 38 # s "midi"  # midichan 1
+            vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+            vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+            vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+            break a p = rot 2  $ bite a "1 .. 32" $ p 
+            amenh p = break 32  $ struct "[t*8]" $ p
+            amenb p = break 32  $ struct "[[t ~]*2 ~ [~ t*2] ~]" $ p
+            amens p = break 32  $ struct "[~ [t ~ ~ t][~ t ~ ~ ][t ~ ~ t]]" $ p
+            modd p          = slow 1 $ degradeBy 0.1 $ amens $ p 
+            cpatt = amens $ otrigger saw "1 _ _ 1 _ _ _ 1 _ _ "
+        p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+        d1 
+            $ loopAt 2
+            $ stack [
+                    stack [
+                           amenb $ midichan ((choose [1,0,1,0])) 
+                          ,amenh $ midichan 1 
+                          ,amens $ midichan 2
+                          ] 
+                    # s "midi"
+                    -- ,
+                    -- g $
+                    -- brak $ 
+                    -- -- striate "<15 16 1 19>" $
+                    -- -- chunk 3 (stutWith 10 0.16 ((# speed (range (-1) (-0.25) $ cpatt)))) $
+                    -- amens $ s "cp:1" # gain 1.2
+                    -- # legato "4.15"
+                    -- -- # nl
+                    ,
+                    -- g $
+                     amenb $ kaivoy |+ ccv (osc64 0.25 29 120 saw) # midichan "[0,1,2]",
+                     amenb $ kaivox |+ ccv ((slow 20 $ run 20) + 50) # midichan "[0,2]"
+                    --  ,
+                    -- modd $ kaivoseqstep     + ccv (segment "<4 5>" $ range 30 120 $ cpatt),
+                    -- modd $ kaivorespitch    + ccv (range 1 25 $ slow 5.1 $ segment 20 $ cpatt),
+                    -- modd $ kaivomod         + ccv (range 41 50 $ cpatt)
+                    ,
+                    modd $ vhdelaypitch + ccv (range  64  "<99 120 0 100 70>" $ otrigger sine "1 _ _ 1 _ 1 _ _" ) 
+                    ,
+                    modd $ degradeBy 0.4 $ ((choose[0.0645,0.0123]) ~>) $ vhdelaypitch  + ccv (range  "<99 120 0 100 70>" 62 $ otrigger sine "1 _ _ 1 _ 1 _ _" ) 
+                    ,
+                    modd $ (0.01<~) $ vhdelaydiffamt + ccv (range 1 42 $ trigger rand "1 _ _ 1 _ 1 _ _" ) # shrand 119
+                    ,
+                    modd $ vhdelaytime + ccv (range 3 0 $ cpatt) 
+                    ]
+            # cps (80/120)
+
+
+
+
+---paramorph trap
+
+let
+    amenh = struct "[t*8]"
+    amenb = struct "[[t ~]*2 ~ [~ t*2] ~]"
+    amens = struct "[~ [t ~ ~ t][~ t ~ ~ ][t ~ ~ t]]"
+    
+    
+    b="[hh!!!! hh:7 hh!,[bd ~]*2 ~ [~ [bd ~]] ~ , ~ [sn ~ ~ sn][~ sn ~ ~ ][~ ~ sn ~]]"
+    c="[hh!!!! hh:14 hh!,[~ bd*2] ~ [~ [bd ~]] ~ , [~ sn ~ ~ ][ sn ~ ~ sn ][~ sn ~ ~][~ ~ sn ~]]"
+    
+    
+    do 
+        let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+            kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+            kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+            kaivomod        = ccn 25 # s "midi"  # midichan 1
+            kaivox          = ccn 33 # s "midi"  # midichan 1
+            kaivoy          = ccn 38 # s "midi"  # midichan 1
+            vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+            vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+            vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+            break a p = rot 1  $ bite a "[1 .. 4][32 .. <4>][8 .. <16 24> .. 4]" $ p 
+            amenh p = break 32  $ struct traphh $ p
+            amenb p = break 32  $ struct trapbd $ p
+            amens p = break 32  $ struct trapsn $ p
+            modd p          = slow 2 $ degradeBy 0.1 $ amenb $ p 
+            cpatt = amens $ otrigger saw "1 _ _ 1 _ _ _ 1 _ _ "
+        p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+        d1 
+            $ loopAt "[3]"           
+            $ stack [
+                    stack [
+                           amenb $ midichan ((choose [1,1,0])) 
+                          ,amenh $ midichan 1 
+                          ,amens $ midichan 2
+                          ] 
+                    # s "midi"
+                    -- ,
+                    -- g $
+                    -- brak $ 
+                    -- -- striate "<15 16 1 19>" $
+                    -- -- chunk 3 (stutWith 10 0.16 ((# speed (range (-1) (-0.25) $ cpatt)))) $
+                    -- amens $ s "cp:1" # gain 1.2
+                    -- # legato "4.15"
+                    -- -- # nl
+                    ,
+                    -- g $
+                     amenb $ kaivoy |+ ccv (osc64 0.25 29 120 saw) # midichan "[0,1,2]",
+                     amenb $ kaivox |+ ccv ((slow 20 $ run 20) + 50) # midichan "[0,2]"
+                    --  ,
+                    -- modd $ kaivoseqstep     + ccv (segment "<4 5>" $ range 30 120 $ cpatt),
+                    -- modd $ kaivorespitch    + ccv (range 1 25 $ slow 5.1 $ segment 20 $ cpatt),
+                    -- modd $ kaivomod         + ccv (range 41 50 $ cpatt)
+                    ,
+                    modd $ vhdelaypitch + ccv  (range 20 5 $ cpatt)  # s "midi" # midichan "[0,1,2]"
+                    ,
+                    modd $ degradeBy 0.9 $ ((choose[0.0645,0.0123]) ~>) $ vhdelaypitch  + ccv (range  3 62 $ otrigger sine "1 _ _ 1 _ 1 _ _" )  # s "midi" # midichan "[0,1,2]"
+                    ,
+                    (0.01<~) $ vhdelaydiffamt + ccv (range 1 10 $ cpatt) # shrand 119 # s "midi" # midichan "[0,1,2]"
+                    , modd $ vhdelaytime + ccv (range 0 0 $ cpatt)  # s "midi" # midichan "[0,1,2]"
+                    ,vhdelay + ccv 1 # s "midi" # midichan 2
+                    ]
+            # cps (80/120)
+
+
+            
+---paramorph vossi bop
+let trapbd =  "[t ~ ~ t] [~ ~ t ~] [~ t ~ <~ ~ [t]>] [~ ~ ~ ~]" 
+    trapsn =  "[~ ~ t ~][~ ~ t <~ ~ ~ [~ t]>]"    
+    traphh =  "t*16" 
+    vossib =  "[t <~ t> <~ t> ~] [~ <~ t> ~ t] [~ <~ t> t ~] [~ ~ <~ t> <t ~>]"
+    vossis =  "[~ ~ t ~][~ ~ t ~]"
+    vossih =  "[~ t]*4"
+
+ hush   
+    
+do 
+    let kaivoseqrate    = ccn 30 # s "midi"  # midichan 1
+        kaivoseqstep    = ccn 31 # s "midi"  # midichan 1  
+        kaivorespitch   = ccn 32 # s "midi"  # midichan 1
+        kaivomod        = ccn 25 # s "midi"  # midichan 1
+        kaivox          = ccn 33 # s "midi"  # midichan 1
+        kaivoy          = ccn 38 # s "midi"  # midichan 1
+        vhdelaypitch    = ccn 55 # s "midi"  # midichan 1
+        vhdelaydiffamt  = ccn 56 # s "midi"  # midichan 1
+        vhdelaytime     = ccn 57 # s "midi"  # midichan 1
+        break a p = rot 0  $ bite a (degradeBy 0 $ cat["[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]"]) $ p 
+        amenh p = break 16  $ struct vossih $ p
+        amenb p = break 16  $ struct vossib $ p
+        amens p = break 16  $ struct vossis $ p
+        modd p          = slow 12 $ degradeBy 0.3 $ amens $ p 
+        cpatt = amens $ otrigger saw "1 _ _ 1 _ _ _ 1 _ _ "
+    p "midiclock" $ midicmd "midiClock*48" # s "midi" 
+    d1 
+        $ loopAt "[2]"           
+        $ stack [
+                -- slow "<2 2 2 3 1>" $ 
+                -- every 5 (iter 8) $
+                -- every 3 (within(0,5) rev) $
+                -- every 8 (sometimes　$　stutWith 2 (0.0625*3) (# release 0.1)) $ 
+                stack [
+                         amenb $ midichan 0 
+                        ,amenh $ degradeBy 0 $ midichan 1
+                        ,amens $ midichan 2 
+                        ] 
+                # s "midi"
+                -- g $
+                    -- amenb $ kaivoy |+ ccv (osc64 0.25 29 120 saw) # midichan "[0,1,2]",
+                    -- amenb $ kaivox |+ ccv ((slow 20 $ run 20) + 50) # midichan "[0,2]"
+                --  ,
+                -- modd $ kaivoseqstep     + ccv (segment "<4 5>" $ range 30 120 $ cpatt),
+                -- modd $ kaivorespitch    + ccv (range 1 25 $ slow 5.1 $ segment 20 $ cpatt),
+                -- modd $ kaivomod         + ccv (range 41 50 $ cpatt)
+                ,
+                modd $ vhdelaypitch + ccv  (range 20 5 $ cpatt)  # s "midi" # midichan "[0,1,2]"
+                ,
+                modd $ degradeBy 0.9 $ ((choose[0.0645,0.0123]) ~>) $ vhdelaypitch  + ccv (range  3 62 $ otrigger sine "1 _ _ 1 _ 1 _ _" )  # s "midi" # midichan "[0,1,2]"
+                ,
+                (0.01<~) $ vhdelaydiffamt + ccv (range 1 10 $ cpatt) # shrand 119 # s "midi" # midichan "[0,1,2]"
+                , modd $ vhdelaytime + ccv (range 0 0 $ cpatt)  # s "midi" # midichan "[0,1,2]"
+                -- ,vhdelay + ccv 1 # s "midi" # midichan 2
+                ]
+        # cps (90/120)
+
+hush
+
+d1 
+-- $ loopAt 2
+$ slow 2
+$ stack [
+    struct "[~ t]*4" $ s "hh" # gain 1.2
+    ,
+    struct "[~ ~ t ~][~ ~ t ~]" $ s "sn:2" # gain 1.2
+    ,
+    -- every 3 (linger (0.0625*2)) $
+    struct "[t <~ t> <~ t> ~] [~ <~ t> ~ t] [~ <~ t> t ~] [~ ~ <~ t> <t ~>]" $ s "byd:2" # gain 1.2
+]
+# cps (99/120)
+
+hush 
+
+let trapbd =  "[t ~ ~ t] [~ ~ t ~] [~ t ~ <~ ~ [t]>] [~ ~ ~ ~]" 
+    trapsn =  "[~ ~ t ~][~ ~ t <~ ~ ~ [~ t]>]"    
+    traphh =  "t*16" 
+    vossib =  "[t <~ t> <~ t> ~] [~ <~ t> ~ t] [~ <~ t> t ~] [~ ~ <~ t> <t ~>]"
+    vossis =  "[~ ~ t ~][~ ~ t ~]"
+    vossih =  "[~ t]*4"

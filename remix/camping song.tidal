@@ -1,0 +1,73 @@
+
+
+
+p "itn 1"
+$ jux rev
+$ slice 16 "{1 [3 2] 4 5 7 6}%6" "camp"
++ n (segment "<1 2 2>" $ slow 117 $ run 120)
+-- # cut 1
+
+hush
+
+
+p "b1"
+$ slow 1.2
+$ every 2 (|+ n 1)
+$ stack [
+        every 2 (inside 4 (rot 1)) $
+        repeatCycles 2 $    
+        slice 8 "1 3 2 0 [4 ~] 5 7 [6 ~]" "camp" # (slow "1" $ nl) + n 4
+        ]
+# cps 0.7
+
+
+0 2 4 6 bd
+
+:t soak
+
+hush
+
+d1 $ soak 4 (* speed 1.5) $ sound "bd(3,8) sd:2"
+
+p "monba"
+$ slow  2
+-- $ every 4 (rot "2")
+$ stack [
+        slice 8 "0 2 4 [6 ~ ~ [5]]" "camp"
+        ,
+        -- g $
+        -- every 4 (rot 2) $
+        fast 4 $ every 3 (0.25 <~) $ slice 8 "~ ~ ~ <[[1 3] 5] 7>" "camp"
+        ,
+        -- g $
+        slice 8 "1 3 2 0 [4 ~] 5 7 [6 ~]" "camp" # (slow 0.5 $ nl) # gain 0.7
+        ,
+        g $
+        fast 4 $ every 2 (0.25 <~) $ s "~ <~ ~ ~ ~ sn> ~ sn"   
+        ]
+        # release 0.17
+        -- # begin (osc 16 32 0 0.9 sine)
+        # hold 2.52
+        # (slow 0.5 $ nl)
+# cps 1
+
+hush
+
+
+
+
+all = streamAll tidal
+
+all 
+(
+ (chunk 3 (chop 2))   
+-- .(linger 0.6)    
+-- .(+ begin (slow 16 $ segment 16 $ range 0 0.95 $ saw))
+.(# release ((choose [1.2,1.25]) # shrand 11)) 
+-- .(+ attack (slow 4 $ segment 40 "0.3 0.7 0.1 2"))
+)
+
+all id
+
+
+hush

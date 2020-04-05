@@ -1,0 +1,97 @@
+--MIDI
+
+do
+  let world p = slow "<4 4 3 2>" $ struct (cat ["t(3,5,2)","t(7,16,14)","t(11,24,14)","t(9,16)","t(13,24,5)", "t(4,9)"]) $ p
+  d3
+      -- $ swingBy 0.25 (0.44)
+      -- $ layer [plyWith (round <$> (range 10 30 $ rand)) (|* gain 0.91).(|* speed (range 1 2.05 $ rand)).(|+ begin 0.015)
+      -- ,((range 0.005 2.5 $ slow 20 $ rand) ~>)
+      -- ]
+      $ sew (slow 4 $ bizy) (world $ s "qin01" # gain 0.8) (g $ s "cym*4" # gain 0.8 # lpf (osc64 12 17000 400 sine))
+      # speed (choose [1,1,-1,1,0.74,0.5,-0.5])
+      * speed (segment 4 $ range (-2) 2 $ (cF 0.5 "2"))
+      # up (
+          arp (select (cF 0.5 "0") ["up","down"]) 
+          (select (cF 0.5 "1") ["a'm6by9'4","e'sus2'2","f'sus4'6","[d'sus2'5 a'six'2]"])
+          )
+      # cps (segment 32 $ range 0.75 1 $ slow 24 $ saw)
+      # delaytime (segment 1 $ choose [0.51,0.625,0.12,0.21])
+      # delayfeedback 0.4
+      # delay (segment 1 $ range 0 1 $ (cF 0.5 "4"))
+      # n (run (segment 16 $ range 1 16 $ cF 0 "3" ))
+      # orbit 1
+
+
+hush
+
+
+
+
+do 
+    let srand = speed (range 0 (trigger 3 $ slow 5.1 $ range (0) 7 $ saw) $ saw)
+        dramp a b p = degradeBy (trigger 3 $ slow a $ range 0 b $ envL) $ p
+        sverb = room (range 0 (trigger 3 $ slow 12.1 $ range 0 1 $ saw) $ saw)
+    d1 
+      $ dramp 10 0.9
+      $ (# cps (slow 10 $ rangex 4.5 0.4 $ saw )) 
+      $ stack [
+              g $
+              dramp 1 0.3 $ s "qin01" 
+              ,
+              off (range 0 1.4 $ slow 4 $ sine) ((# nr).(100 <~)) $
+              struct "t(4,11)" $
+              dramp 2 0.4 $
+              s "qin01" 
+              -- # sverb 
+              -- # nr
+              -- # accelerate 1.4
+            --  |+ srand
+            --  |+ up (arp "<[updown ~] [up pinkyup]/2 disconverge/2 converge>" "<a'm9'8 f'7sus2'10 f'm6'4>")
+             ,
+              g $
+              dramp 10 0.4 $
+              off (range 0 1 $ slow 12 $ sine) (# srand) $
+              struct "t(2,3)" $
+              s "stone2" # gain 0.8
+              ]
+      # cut 0
+     |+ nl   
+      # lpf 4000
+  
+  hush
+  
+  
+  d1 $ s "byd"
+  
+  + speed (range 1 (trigger 3 $ slow 30.1 $ range 1 30 $ saw) $ rand)
+  
+  let 
+  
+  do 
+    let srand = speed (slow 10 $ range 0 (rise1 20 1 0.3) $ sine)
+        sverb = room (range 0 (rise1 4 0 1 ) $ saw)
+    d1
+      $ (# cps (slow (osc64 12 12 1 saw) $ rangex 4.5 0.4 $ saw )) 
+      $ (|+ speed (degradeBy (rise1 10.1 0.7 0.04) (rise1 (choose [1,9]) 10 0.5) )) 
+      $ stack [
+        off (range 0 1.4 $ slow 4 $ sine) ((# nr).(10 <~)) $
+        struct "t*2" $
+        s "[qin01]"
+        # n (rise1 20.5 1 (irand 1000)) 
+        # sverb
+        # size 0.7
+        # srand
+        # gain (rise1  4 1 1 )
+        ]
+       |* speed (choose [1,-1,-1])
+        # lpf (osc64 12.2 14000 4000 sine)
+        # octersub 1
+        # cut 0
+   
+
+hush
+
+
+d1 $ s "bd"
+
+hush

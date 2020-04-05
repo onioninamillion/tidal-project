@@ -1,0 +1,111 @@
+setcps 0.4
+
+p "neutron"
+  -- $ every 3 (slow "<2,5,6>")
+  $ n (range "gong" "0 .. 12")
+  -- +  n "0 <5 14> <9 <21? 7>/3>"
+  -- $ n "12"
+  -- + n "[3(6,9),5(2,15),[10(3,8)]/3,17(3,8)]"
+  # s "midi"
+  # midichan 0
+  -- |+| n (slow 3 (range 0 74 $ sine1))
+  # sustain "[3(3,8),1.5]"
+  # cps (segment 10 $ range 0.5 2 $ rand)
+
+hush
+
+setcps 1.5
+
+do
+    let spat = "[1.1 ~ ~ ~ ~ ~ 0.5 ~ ~ ~][1 [1 2] 1 ]*3"
+    let fpat = "[1  ~ ~ ~ ~ ~ 100 ~ ~ ~][2 1 1]"
+    let dpat = "[0  ~ ~ ~ ~ ~ 1   ~ ~ ~][1 [1 1]]"
+    let mod p = spaceOut [1,1.1,0.9,0.95,1.53,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.3] $ p
+    d1 $ mod $ gain spat # note "-12" # s "midi" # midichan 0
+    d2 $ mod $ control fpat # ctlNum 100 # s "midi" # midichan 0 # midicmd "control"
+    d3
+       $ degradeBy 0.3
+       $ every 5 (trunc "0.25")
+       $ every 6 (trunc "0.125")
+       $ mod $ n dpat # s "yes" # gain 1 # cut 1 # n (slow 110 (run 114))
+    d4 $ mod $ n dpat # s "[[cp:1(3,7,4) ~], [sn:3(3,8) ~]]" # gain 1.5 # cut 0
+    -- # n (slow 10 (run 114))
+
+    hush
+
+  d1 $ sound "bd"
+
+hush
+
+do
+    let spat = "[1.1 ~ ~ ~ ~ ~ 0.4 ~ ~ ~]*2"
+    let fpat = "[0   ~ ~ ~ ~ ~ 127 ~ ~ ~]"
+    let dpat = "[0   ~ ~ 4 ~ ~ 3   ~ ~ ~]"
+    let mod p = spaceOut [1,1.1,0.9,0.95,1.7,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.8] $ p
+    d1 $ mod $ gain spat # sound "bd:3"
+    d2 $ mod $ control fpat # ctlNum 100 # s "midi" # midichan 0 # midicmd "control"
+    d3 $ mod $ midinote dpat # s "midi" # gain 1.2
+
+hush
+
+    do
+        let dis p = segment (1/10) $ p
+        let vary = 0.5
+        let shift p = (1 <~) p
+        let shift' x p = (x <~) p
+        let speeds = slow (segment 10 $ choose [1,1,1,2,2]) $ degradeBy 0.4 $ shift $ s (randcat(
+                        (replicate 5 "midi*1")
+                        ++ (replicate 5 "midi*2")
+                        ++ (replicate 5 "midi*3")
+                        ++ (replicate 5 "midi*4")
+                        ++ (replicate 10 "midi*5")
+                        ++ (replicate 10 "midi*6")
+                        ++ (replicate 7 "midi*7")
+                        ++ (replicate 8 "midi*8")
+                        ++ (replicate 10 "midi*10")
+                        ++ (replicate 10 "midi*12")
+                        ++ (replicate 10 "midi*14")
+                        ++ (replicate 10 "midi*16")
+                        ++ (replicate 10 "midi*18")
+                        ++ (replicate 10 "midi*20")
+                    ))
+        d1 $ sometimesBy vary (# midinote 3) $ shift $ speeds # sound "[bd,cp]" # gain 2
+        d8 $ sometimesBy vary (# gain 1.1) $ shift $ speeds # note "-6" # midichan 15 # gain 1.1
+        d8 $ sometimesBy vary (# gain 1.1) $ shift $ speeds # sound "bd" # midichan 15 # gain 2 # cut 1
+        -- d9 $ sometimesBy vary (# control 127) $ shift $ speeds # control 0 # ctlNum 100 # midichan 15 # midicmd "control"
+
+
+hush
+
+        d7 $ stack [
+            speeds # ctlNum 1 # control (dis $ range 0 127 $ shift' 300 rand)
+          , speeds # ctlNum 2 # control (dis $ range 0 127 $ shift' 301 rand)
+          , speeds # ctlNum 3 # control (dis $ range 0 127 $ shift' 302 rand)
+          , speeds # ctlNum 4 # control (dis $ range 0 127 $ shift' 303 rand)
+          , speeds # ctlNum 5 # control (dis $ shift' 304 $ choose [0,127])
+          , speeds # ctlNum 6 # control (dis $ range 0 127 $ shift' 305 rand)
+          , speeds # ctlNum 7 # control (dis $ range 0 127 $ shift' 306 rand)
+          ]
+    # midichan 15 # midicmd "control"
+
+--morph
+d2
+  $ gain "1*10"
+  # control (slow 1.5 $ range 128 12 $ sine) # ctlNum 20
+  # s"midi" # midicmd "control"
+
+--ENV ATTACK
+d3
+    $ gain "1*20"
+    # control (slow 2 $ range 28 100 $ saw1) # ctlNum 21
+    # s"midi" # midicmd "control"
+
+--LFO SPEED
+d4
+  $ gain "1*10"
+  # control (slow 1.6 $ range 90 10 $ saw1) # ctlNum 22
+  # s"midi" # midicmd "control"
+
+hush
+
+d4 silence

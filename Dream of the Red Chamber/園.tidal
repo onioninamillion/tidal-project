@@ -1,0 +1,301 @@
+-------遊園
+
+  do
+    -- let ffl = (slow "<2 1.2 <1.4 4 10> 1.5 4>" $ smooth ("[-1.01 <12 [-5 24] 40> 0.18 1.2]" ))
+    p "shan"
+    -- $ slow "<10 4 [2 4 20] [4 1 30] 6 [3 20]>"
+      $ slow 3
+      $ degradeBy 0.4
+      -- $ loopAt (range 1.1 3 $ shrand 13)
+      -- $ every 4 (sometimes (|+ accelerate "{0.3 -0.9 1 0.5}%16"))
+      -- $ layer [id ,(degradeBy 0.5).(3.5 ~>).(rev)]  
+      $ striate' 43 (slow 20 $ segment 1 $ smooth "[0.1 0.4]")
+      -- $ rot "<1 0 1 1 [2 0] [0 1]>"
+      -- $ segment (segment "<1 1 2 5 8 15 21>" $ range 2 30 $ rand)
+      $ s "[mu]"
+      # nl
+      -- + rsaw 15 5 1 20
+      + speed (slow "<2 1.2 <1.4 4 10> 1.5 4>" $ smooth ("[-1.01 <12 [-5 24] 40> 0.18 1.2]" ))
+      # size ((slow "<2 1.2 <1.4 4 10> 1.5 4>" $ smooth ("[-1.01 <2 [-5 4] 4> 0.18 1.2]" )))
+      # room 0.4
+      # attack 0.143
+      + begin (osc64 4 0 0.95 sine)
+      # release 3
+      -- # release (range 0.1 "<1.4 2 4.4 5>" $ shrand 442)
+      # cps (("<1 0.5 0.6 0.8 0.6>")*(slow 10 $ range 0.7 0.3 $ sine))
+
+hush
+
+
+do 
+  let perr = segment 16 $ range (-0.5) "<2 1.25 4 4>" $ perlin2With (slow 1.2 $ saw*0.7) (saw*2) 
+  let cpse = (segment 4 $ choose [0.1,0.3,0.14,0.23] )
+  d2
+      $ degradeBy 0.2      
+      $ layer [((loopAt 4).(|- speed (slow 40 $ range 1 4 $ sine))) ,loopAt 3]
+      $ s "[re,re7]"
+      # (slow 4 $ nl)
+      + cps (slow 15 $ segment 20 $ smooth "0.4 1")
+      -- + speed (perr - 0.3)
+      # up (scale "chinese" "1 .. 28")
+      # end (perr)
+      -- # cps (slow 100 $ rangex 1 0.25 $ saw)
+
+scaleList
+
+hush
+
+do 
+  let perr = segment 5 $ range (-1) 3 $ perlin2With (slow 1 $ saw*(1.4)) (saw*2.3) 
+  let cpse = (segment 14 $ choose [0.1,0.3,0.14,0.23] )
+  d1
+    $ loopAt 3
+    $ juxBy 0.6 (+ speed (segment "30 132 [30 20]" perr) # shrand 39)
+    $ (spread (striate' 100) [(9/24), (1/30), (1/20), (15/20) , (11/20)] $ sound "re4" )
+    + speed perr
+    + n (slow 136 $ run 136)
+    # cps (slow 80  $ smooth "0.4 1")
+
+hush
+
+do 
+  let perr = segment 50 $ range (0.5) 3 $ perlin2With (slow 1 $ saw*0.7) (saw*2)
+      looppy = (segment (4) $ range 0.1 0.4 $ shrand 9)
+  d2
+    $ degradeBy 0.4
+    $ slow (segment 1 $ choose [1,1,1,4,7,1.3])
+    $ loopAt (segment (3) $ range 0.05 4 $ shrand 9)
+    $ juxBy 0.5 (+ speed (segment "30 132 [30 20]" perr) # shrand 39)
+    $ (spread (striate' 200) [(7/24), (1/30), (1/20), (15/20) , (12/20)] $ sound "re3" )
+    -- + speed perr
+    + n (slow 136 $ run 136)
+  --  |+ speed  ( rangex (0.1) 3 $ rand )
+    + cps  (slow 50 $ rangex 2 0.3 $ saw )
+    -- # lpf (slow 15 $ segment 16 $ range 200 6000 $ sine )
+    # lpq (range 0 0.5 $ shrand 198)
+    # attsin 15 0 0.2 14
+    # release (range 0.1 3 $ shrand 2)
+    -- # gain "1 1 0 0 0"
+
+    hush
+
+  :t lpf
+
+ let perr = segment 30 $ range (-1) 3 $ perlin2With (saw*0.7) (saw*2) 
+
+ ssaw a b c d = speed (slow a  $segment d $ range b c $ saw )
+
+
+
+hush
+
+    do
+      -- let ffl =  smooth ("[-1.01 <12 [-5 24] 40> 0.18 1.2]" )
+      p "shan"
+        $ slow "<10 4 [2 4 20] [4 1 30] 6 [3 20]>"
+        -- -- $ degradeBy 0.8
+        -- $ loopAt (range 0.1 3 $ shrand 13)
+        $ every 5 (sometimes (|+ accelerate "{0.3 -0.9 1 0.5}%16"))
+        -- -- $ layer [id ,(degradeBy 0.5).(3.5 ~>).(rev)]  
+        -- $ striate' 20 (slow 20 $ segment 10 $ smooth "[0.1 0.4]")
+        -- $ rot "<1 0 1 1 [2 0] [0 1]>"
+        -- $ segment (segment "<5>" $ range 245 500 $ rand)
+        $ pan ( smooth ("[-1.01 <12 [-5 [14]] 40> 0.18 1.2]" ))
+        -- $ speed ( smooth ("[-1.01 <12 [-5 [14]] 40> 0.18 1.2]" ))
+        # s "re5"
+        # cut 0
+        # fast 4 nl
+        -- # size (smooth ("[-1.01 <2 [-5 4] 4> 0.18 1.2]" )))
+        # room 0.2
+        |+ bsaw 14 0 0.95 40
+        # release (range 0.1 4 $ shrand 442)
+        -- # cps (slow 120 $ range 0.2 0.7 $ saw)
+        -- + cps "[1 0.75 1.2 1.75 1 0.75]/5"
+        -- # cps 0.5
+        # binshift (osc 15 0 0.7 sine 16)
+        # comb 0.8
+        # scram (osc 14 0 0.7 sine 16)
+
+
+hush
+
+let a = "<[12 4] [24 10] [8 20]>"
+in
+d1
+  $ slow 3
+  $ every 7 (+ n 10)
+  $ every 8 (+ n 20)
+  $ loopAt 1.5
+  $ chunk 10 ((+ begin (slow a $ (run a)*1)).rev.(+ speed 0.75))
+  $ inside 4 (whenmod 8 2 ((slow 2).(+ speed ((range (-1) 3 $ perlin2With (saw*0.5) (sine*2))))))
+  $ striate a
+  $ sound re8
+  -- # n (slow 136 $ run 136)
+  -- # end (slow 2 $ (run a)*(slow 10 $ range 0.4 1 $ sine) )
+  # cps 0.1
+  -- # cut 1
+
+  let 
+    full = ccv 127
+    high = ccv 90
+    mid = ccv 60 
+    low = ccv 30
+    no = ccv 0  
+    -- trig = ccv 127
+    choosere = choose ["re6","re1","re2","re3","re5","re8","re7"]
+    strtrig  = ccn 0 # s "midi"  # midichan 0
+    strwet a = ccn 1 # s "midi" + ccv a # midichan 0
+    strtrig2  = ccn 2 # s "midi"  # midichan 0
+    strpitch2  = ccn 3 # s "midi"  # midichan 0
+    rescv =  s "midi"  # midichan 0
+
+-- do 
+  -- let les = degradeBy 0.4 
+    p "stre"
+      $ stack [
+          degradeBy 0.4 $ s (segment 25 $ choose ["re1","re8","re7","re7","re8"]) # cut 0 
+          -- # accelerate ((choose [0.21,0.25,0.26,-0.3,-0.9]) # shrand 486)
+          -- + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+        , strwet (smooth "127 0")
+        ,  struct "t*8" $ ccv "[127 0]" # ccn 0 # s "midi"  # midichan 0 # shrand 290
+        , degradeBy 0.1 $ ccv  "[127*5 0*4]" # strtrig2 # shrand 33
+        , degradeBy 0.1 $ chunk 6 (fast 2.5) $ struct "t(3,16)" $ note (scale "harmonicMinor" "1 .. 14") # s "midi" |- note "5"
+        ]
+      -- |- speed (perlin - 0.7 )
+        # hold ((choose [0.1,0.2,0.7,2,3,1]) # shrand 10)
+        + (fast 1 $ nl)
+        -- # cps 0.8
+        # cps (slow 20 $ segment 16 $ rangex 0.5 0.8 $ saw)
+
+scaleList
+ 
+  hush
+
+  p "tin"
+  $ layer [(#size 0.3).(# room 0.7).(0.2 <~)]
+  $ juxBy 0.8 ((slow 1.01).(0.01<~))
+  $ degradeBy 0.5
+  $ sound (slow "<2 3 1 1>"  $ segment 4 $ choose ["re6","re1","re2","re3","re5","re8","re7"])
+  -- + begin (fast 1 $ smooth $ segment 16 $ range 0.1 0.9 $saw)
+  + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+  + release (segment 36 $ (smooth "[0.2 0 0 0 0 0 0 4 0 0 0 0 0 0 0 1]"))
+  + up (slow 16 $  smooth ( "[20 0 -12 0 0 0 0 4 0 0 24 0 0 0 0 10]" ) ) 
+  # hold ((choose [0.1,0.2,0.7,2,3,1]) # shrand 10)
+  + nl
+  # cps (slow 20 $ segment 16 $ rangex 0.5 1 $ saw)
+
+  hush
+
+  scaleList :: String
+
+  do 
+    p "unt"
+    -- $ resetCycles
+    -- $ sometimes ((slow 20).(rev))
+    $ degradeBy 0.1
+    $ layer [   
+                (loopAt 0.1).(# pan (slow (scan 20) $ range 0.25 0.75 $ sine)) 
+                , 
+                (scramble 12).(loopAt 0.1).(# accelerate ((choose [-0.3,0.3,-0.5,0.6,0.1]) # shrand 30)) 
+              , (# speed (perlin + (slow 12 $sine*1.3))).(loopAt 2).(|* gain (slow 26 $ range 0.5 1 $ sine))
+            ]
+    $ sound (segment 8 $ choose ["re1","re2","re4","re5","re6","re7","re3"]) 
+   |+ bsin 15 0 0.9 24
+   + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+    + release (segment 25 $ (smooth "[0.2 0 0 5 0 0 0 4 0 0 0 0 0 0 0 1]"))
+    # cut 0
+    # hold (choose [0.4,1.8,0.7,2,3,1])
+   |* gain 1.1
+    # up (degradeBy 0.5 (scale "messiaen5" (run "<10,-14,20,0.3>")))
+    + nl
+    # cps (slow 40 $ segment 16 $ rangex 1 0.3 $ saw)
+  
+    hush
+
+---------------------------------------LAYER   2 -------------------------------------------------------
+
+  p "tin layer2"
+  -- $ rev
+  -- $ layer [(#size 0.1).(# room 0.7).(0.02 <~)]
+  -- $ juxBy 0.8 ((slow 1.01).(0.01<~))
+  -- $ degradeBy 0.2
+  $ sound (slow "<2 3 1 1>"  $ segment 10 $ choose ["re9"])
+  -- + begin (fast 1 $ smooth $ segment 16 $ range 0.1 0.9 $saw)
+  + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+  + release (segment 36 $ (smooth "[0.2 0 0 0 0 0 0 4 0.1 0 0 0 0 0 0 1]"))
+  + up (slow 16 $  smooth ( "[20 0 -12 0 0 0 0 4 0 0 24 0 0 0 0 10]" ) ) 
+  # hold (segment 18 $ (choose [0.1,0.2,0.7,2,3,1]) # shrand 10)
+  + n (slow 10 $ run 50)
+  -- + n 10
+  # cps (slow 20 $ segment 16 $ rangex 0.5 1.2 $ saw)
+
+hush
+
+  do 
+    p "unt"
+    -- $ resetCycles
+    -- $ sometimes ((slow 4).(rev))
+    $ degradeBy 0.1
+    -- $ loopAt 1
+    $ layer [   
+                -- (loopAt 0.1).(# pan (slow (scan 20) $ range 0.25 0.75 $ sine)) 
+                -- , 
+                -- (scramble 12).(loopAt 0.1).(# accelerate ((choose [-0.3,0.3,-0.5,0.6,0.1]) # shrand 30)) 
+              (+ speed (perlin + (slow 12 $sine*1.3))).(loopAt 2).(|* gain (slow 26 $ range 0.5 1 $ sine))
+            ]
+    $ sound (segment 8 $ choose ["re9"]) 
+   |+ bsin 15 0 0.9 16
+   + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+    + release (segment 50 $ (smooth "[0.2 0 0 5 0 0 0 4 0 0 0 0 0 0 0 1]"))
+    -- # cut 1
+    # hold (choose [0.4,1.8,0.7,2,3,1])
+   |* gain 1.1
+    # up (degradeBy 0.15 (scale "messiaen5" (run "<10,-14,20,0.3>")))
+    + n (slow 10 $ run 10)    
+    # cps (slow 40 $ segment 16 $ rangex 1 0.3 $ saw)
+
+hush
+
+
+d1  
+  $ sometimes ((chop 10).(degradeBy 0.23))
+  $ layer [id, (# accelerate 0.5), (# accelerate (-1)) ]
+  $ juxBy "<0.4 0.5 0.6 0.7 0.8>" ((|+ speed (range 0.3 1 $ sine)).(+ cps (slow 5 $ segment 16 $ range 0.5 1 $ saw)))
+  $ sound "re9"
+  # n (slow 50 $ run 50 )
+  # lpf (segment 16 $ range 1000 6000 $ perlin + 0.3 )
+  # attack 0.4
+  # hold 2
+  # rsin 15 0.13 4 16
+
+hush
+
+
+
+
+:t loopAt
+
+:t chop
+
+:t unit
+
+  hush
+
+
+  p " resample"
+    $ s "midi*500"
+    # ccn 96
+    # ccv (slow 1 $ range 0 3 $ rand)
+    + ccv (slow 4 $ range 20 127 $ sine)
+    # cps 0.2
+
+  p "livenote"
+  -- $ fast "<20 10>"
+  $ degradeBy 0.8
+  $ s "midi*20 midi*12 midi*4 midi*2"
+  # note (scale "messiaen3" "1 .. 12")
+  # legato (choose [0.4,3,10])
+
+  hush
+
+  scaleList

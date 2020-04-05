@@ -1,0 +1,37 @@
+d1 $ s "asynth" 
+
+d2 $ slow 4 $ s "asynth" # midichan "[1,0]" 
+
+
+hush
+
+do 
+    let world p = slow "<2 2 3 4>" $ struct 
+                        (randcat [
+                        -- "t(3,5,2)",
+                    -- "t(7,16,14)",
+                    "t(11,24,14)",
+                    "t(9,16)",
+                    -- "t(13,24,5)",
+                    "t(4,9)"
+                        ]) $ p
+    d1 
+        $ brak
+        -- $ jux (off (slow 12 $ segment 16 $ range 0 0.25 $ saw) (slow 1.02).(|- n 0))
+        $ stack [
+                sew (slow 2 $ bizy) (world $ s "asynth") (s "asynth*13")
+                -- # n ("c'min7'4 f'min7'7")
+                |+  n (scale "<yu>" "<[-12 .. <10 5>][<4 10 8 9 5> .. <0 -5 -8>]*[2]>" ) 
+                |-  n "12"
+                # lpf (range 3000 1000 $ rand)
+                # lpq 0.1
+        ]
+         # sustain (slow 3 $ range 0.14 0.73 $ saw)
+        --  # attack (world $ 0.1)
+         # cps (slow 4 $ range 0.35 1 $ saw)
+        --  + n ( range 0 12 $ smooth $ world $ sine )
+
+hush
+
+
+hush

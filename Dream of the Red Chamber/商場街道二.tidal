@@ -1,0 +1,107 @@
+
+d3 
+$ slow 2
+$ s "[byd(9,16)]"  
+
+-- world music
+
+do 
+    let world p = slow "<2 2 3 4>" $ struct 
+                        (randcat [
+                        -- "t(3,5,2)",
+                    -- "t(7,16,14)",
+                    -- "t(11,24,14)",
+                    "t(9,16)",
+                    -- "t(13,24,5)",
+                    "t(4,9)"
+                        ]) $ p
+    d1 
+        $ brak
+        $ jux (off (slow 12 $ segment 16 $ range 0 0.25 $ saw) (slow 1.02).(|- speed 0))
+        $ stack [
+                sew (slow 2 $ bizy) (world $ s "superfork") (s "superfork*4")
+                -- # n ("c'min7'4 f'min7'7")
+                |+  n (scale "<yu>" "<[-12 .. <10 5>][<4 10 8 9 5> .. <0 -5 -8>]*[2]>" ) 
+                |-  n "12"
+                # lpf (range 3000 1000 $ rand)
+                # lpq 0.1
+        ]
+         # sustain (slow 3 $ range 0.14 0.73 $ saw)
+        --  # attack (world $ 0.1)
+         # cps (slow 4 $ range 0.35 1 $ saw)
+        --  + n ( range 0 12 $ smooth $ world $ sine )
+
+         hush
+
+scaleList
+
+do 
+    let world p =  struct (randcat ["t(3,5,2)","t(7,16,14)","t(11,24,14)","t(9,16)","t(13,24,5)", "t(4,9)"]) $ p
+    d1 
+        $ whenmod 17 13 (slow 1.25)
+        $ jux (off (slow 12 $ segment 16 $ range 0 0.5 $ saw) (slow 1.25))
+        $ stack [
+                -- layer [id, (# s "midi").(# midichan 13).(# n (irand 80))] $
+                sew (fast 3 $ bizy) (world $ s "superfork") (s "superfork*20")
+                -- # s "superfork"
+                -- # n ("c'min7'3")
+                |<  n (scale (select 0 ["prometheus","ahirbhairav"]) "<[-12 .. <10 12 9>][<10 9 [8]> .. <0 -5 -8>]*[2]>" ) - 12
+                -- # lpf (range 5000 17000 $ rand)
+        ]
+        # sustain (slow 3 $ range 3.4 1.73 $ saw)
+        # attack (world $ 2.5)
+        # cps (slow 4 $ range 0.3 2 $ saw)
+         
+
+do 
+    let world p = slow "4 4 3 2" $ struct (cat ["t(3,5,2)","t(7,16,14)","t(11,24,14)","t(9,16)","t(13,24,5)", "t(4,9)"]) $ p
+    d1 
+        $ whenmod 17 13 (slow 1.25)
+        $ every 4 (palindrome)
+        $ jux (off (slow 12 $ segment 16 $ range 0 0.5 $ saw) (slow 1.25))
+        $ stack [
+                layer [id, (# s "midi").(# midichan 13).(# n (irand 80))] $
+                sew (slow 4 $ bizy) (world $ s "superfork") (s "superfork*12")
+                -- # s "superfork"
+                -- # n ("c'min7'3")
+                |+  n (scale "prometheus" "<[<-12 -4> .. <10 12 9>][<10 9 [8]> .. <0 -5 -8>]*[2]>" ) 
+                |-  n "<12>"
+                # lpf (range 200 17000 $ rand)
+        ]
+        -- # sustain (slow 3 $ range 3.4 2.73 $ saw)
+        -- # attack (world $ 2.5)
+        # cps (slow 14 $ range 0.3 1.5 $ saw)
+        
+        hush
+
+         scaleList
+
+
+
+
+
+(2,5) : A thirteenth century Persian rhythm called Khafif-e-ramal.
+(3,4) : The archetypal pattern of the Cumbia from Colombia, as well as a Calypso rhythm from Trinidad.
+(3,5,2) : Another thirteenth century Persian rhythm by the name of Khafif-e-ramal, as well as a Rumanian folk-dance rhythm.
+(3,7) : A Ruchenitza rhythm used in a Bulgarian folk-dance.
+(3,8) : The Cuban tresillo pattern.
+(4,7) : Another Ruchenitza Bulgarian folk-dance rhythm.
+(4,9) : The Aksak rhythm of Turkey.
+(4,11) : The metric pattern used by Frank Zappa in his piece titled Outside Now.
+(5,6) : Yields the York-Samai pattern, a popular Arab rhythm.
+(5,7) : The Nawakhat pattern, another popular Arab rhythm.
+(5,8) : The Cuban cinquillo pattern.
+(5,9) : A popular Arab rhythm called Agsag-Samai.
+(5,11) : The metric pattern used by Moussorgsky in Pictures at an Exhibition.
+(5,12) : The Venda clapping pattern of a South African children’s song.
+(5,16) : The Bossa-Nova rhythm necklace of Brazil.
+(7,8) : A typical rhythm played on the Bendir (frame drum).
+(7,12) : A common West African bell pattern.
+(7,16,14) : A Samba rhythm necklace from Brazil.
+(9,16) : A rhythm necklace used in the Central African Republic.
+(11,24,14) : A rhythm necklace of the Aka Pygmies of Central Africa.
+(13,24,5) : Another rhythm necklace of the Aka Pygmies of the upper Sangha.
+
+
+
+

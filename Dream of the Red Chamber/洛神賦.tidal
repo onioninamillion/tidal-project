@@ -1,0 +1,70 @@
+-- do 
+  -- let les = degradeBy 0.4 
+  p "stre"
+  $ stack [
+      degradeBy 0.4 $ s (segment 25 $ choose ["re1","re8","re7","re7","re8"]) # cut 0 
+      -- # accelerate ((choose [0.21,0.25,0.26,-0.3,-0.9]) # shrand 486)
+      -- + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+    , strwet (smooth "127 0")
+    ,  struct "t*8" $ ccv "[127 0]" # ccn 0 # s "midi"  # midichan 0 # shrand 290
+    , degradeBy 0.1 $ ccv  "[127*5 0*4]" # strtrig2 # shrand 33
+    , degradeBy 0.1 $ chunk 6 (fast 2.5) $ struct "t(3,16)" $ note (scale "harmonicMinor" "1 .. 14") # s "midi" |- note "5"
+    ]
+  -- |- speed (perlin - 0.7 )
+    # hold ((choose [0.1,0.2,0.7,2,3,1]) # shrand 10)
+    + (fast 1 $ nl)
+    -- # cps 0.8
+    # cps (slow 20 $ segment 16 $ rangex 0.5 0.8 $ saw)
+
+scaleList
+
+hush
+
+
+hush
+
+scaleList :: String
+
+---------------------------------------LAYER   2 -------------------------------------------------------
+
+p "yin2"
+$ slow 2
+-- $ rev
+-- $ layer [id,(# pan rand)]
+$ sound (segment 2 $ choose ["yin3*1","pa1"])
++ gain  (slow 1 $ segment 16 $ range 0.4 1 $ saw)
+# att 2
+# release 3
+-- # fshift (osc64 11 (-10) 24 sine) 
++ nl
+-- # smear (osc64 16 0.01 0.4 sine)
+# comb 0.2
+-- |+ speed (slow 12 $ smooth $ "<1 2 -1> 0  0 2")
+-- * speed (-1)
+-- # binshift (osc64 12 0.01 0.8 sine)
+# scram (slow 14 $ range 0.4 0.09 $ sine)
+|+ n 10
+# pan (range 0.2 0.8 $ rand)
+|+ cps (slow (osc64 5 10 1 sine) $ segment 16 $ range 0.3 0.53 $ saw)
+# orbit 1
+
+hush
+
+d1 $ s "yin3:21"
+
+
+hush
+
+
+
+hush
+
+
+d2 
+$ slow 3
+-- $ n ("[c4 a4 f4 d4 g4]/7" 
+--     |+ "<'ninesus4 'maj7 ['sixby9 'ninesus4]>" 
+--     |+ "<'2 '2 '3>") 
+$ n ("<c3 f2 g2>" |+ "'minor7") 
++ n "[12,0]"    
+# s "midi" # midichan 0 

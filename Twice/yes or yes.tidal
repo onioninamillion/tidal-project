@@ -1,0 +1,52 @@
+TWICE Yes or Yes: yes 308 samples 2beat cut (include SFX)
+
+138 bpm
+
+
+
+
+
+bps (148/120)
+
+d2
+$sound "yes*20"
+# speed (fast (choose [15.0006,15.0005..15.0000]) $ range 0.97 1.03 $saw)
+# gain 0.8
+
+d2 silence
+
+
+hush
+
+d1
+-- $ rev
+$ sound "yes"
++ nl
++ release "2"
+-- # speed "-1"
+
+cps (-1)
+
+d1
+$ fast 2
+-- $ every 2 (within (1/8,1/4) ("<0.25 0.33 0.125>" ~> ).(rev))
+$ sound "yes"
+# n (slow 308 (run 308))
+|+| n (fast 2 (run 4))
+# release "[1.75 [0.5 0.25?]]*4"
+
+
+d3
+$ fast 3
+-- $ striate' 2000 (1/150)
+-- $ loopAt 0.33
+-- $ juxBy 0.4 (slow 2.5)
+$ sound "yes*4"
+# n (slow 308 (run 308))
+|+ n (fast 3 (run 2))
+# release "[1 [0.7 0.4]*5 [0.5 ~]]*7"
+-- - speed 0.75
+
+d3 silence
+
+hush

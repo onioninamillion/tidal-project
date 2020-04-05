@@ -1,0 +1,164 @@
+
+hush
+
+x - - x - - x - - - x - x - - -
+
+do
+  let pat = "{1 ~ ~ 1 ~ ~ 1 ~ ~ ~ 1 ~ 1 ~ ~ ~ }"
+
+
+      d2 $ gain pat1 # sound "lkhu:1"
+         $ degradeBy 0.1
+         -- $ within (0.3,0.
+         $ off 0.35 (# s "pi")
+         $ off 0.75 (# dur "[~ [0.1 0.7]/3]/3")
+         $ foldEvery [2,3,4] (swingBy (1/5) 12 ).(0.25 <~)
+         $ whenmod 5 1 (jux $ (swingBy (1/2) 8))
+
+
+
+
+hush
+
+-- 11/1
+d1
+   $ density 1
+   $ stut' 4 0.125 ((|+| pan "0.2 0.1 1") . (|+| begin "0.2 0.3 0.7"))
+   -- $ whenmod 9 2 palindrome
+   -- $ jux (rev)
+   $ slow 4
+   -- $ sometimes (|+| speed "-2")
+   $ whenmod 9 4 (within (0.2,0.7) $ jux (stut' 4 0.3 (|+| speed "-2")).(|-| gain 0.4).(iter 5 "0.2 0.3 0.4 0.5" <~ ))
+   $ whenmod 5 2 (|+| pan "[1 0 1]/3")
+   $ shuffle 16
+   $ sound "[prh:1 prh:1,prh:1  prh:1 prh:1]"
+   |+| speed "[1 -1.5 1.0]"
+   -- # delay "0.1 0.3 1"
+   -- # delaytime "0.3"
+   -- # delayfeedback "0.4 0.44 0.5"
+   # gain 0.9
+   -- # cutoff 18000
+   # cut "0"
+
+d2
+  $ density 3
+  $ spread (slow) [(3/2),2,3,1]
+  $ within (0,0.7) (off 0.125 (# s "lkdr:1 [~ lkdr:0 ]"))
+  $ whenmod 5 3 ((off 0.125 (|+|speed (slow 4 $ sine1 * 1.5)).(slow 3).(# s "[lkdr:0 lksy:2]")).(|+|pan "[1 ~ [0 ~] 1]").(|+| gain (slow 4 $ sine1 * 0.3)))
+  $ every 3 (swing 0.25)
+  $ every 4 (0.125 <~ )
+  $ n (slow 2 $ off 0.125 (+12) $off 0.25 (+9)$ slow 2 $ "{[0 ~] 1 [5(3,8) 3*2] 4*2}")
+  # sound "[lkhu:3 ~ ~ lkhu:5 ~ ~ lkhu:4 ~ ~ ~ lkhu:6 ~ lkhu:10 ~ ~ ~]*4"
+  # cutoff (slow 2 $ sine1 * 12000 +1000)
+  # resonance (sine1*0.2)
+  # room 0 # gain 0.7
+  # cut "0"
+
+d3
+  -- $ spread ($) [fast 2, rev, slow 2, striate 14, (# speed "2")]
+  $ weave 16 (pan sine1)
+  [
+  slow 4 $
+  -- spread ($) [striate 10,striate 15, striate 1, striate 25, striate 30]$
+  n (iter 5 $ (slow 12 $ run 12)) # sound"sing4:2",
+  -- density 2 $
+  n (iter 5 $ (run 8)) # sound"pip:2" # speed "1.03",
+  density 3 $
+  within (0,0.5) (|+| gain "0 1 0 1 1 0 1")$
+  n (iter 5 $ (run 10)) # sound"pip:1" # speed "1.3 1.2 1.1"
+  -- n (iter 4 $ pat )# sound "pi" # speed 0.5
+  ]
+  #cut "0"
+
+
+hush
+
+
+
+--11/2
+bps 1.5
+
+d4
+  $ sometimes (within (0.2,0.3) $ jux (stut' 4 0.3 (|+| speed "-1")).(|-| gain 0.4).(iter 5 "0.2 0.3 0.4 0.5" <~ ))
+  $ sometimes (within (0.8,1) $ juxBy 0.7 (stut' 6 0.125 (|+| speed "-2")).(slow 4).rev)
+  $ slow 10
+  $ spread ($) [striate' 16 (1/10) ,striate' 16 (1/8),
+                striate' 16 (1/4) ,striate' 14 (1/2),
+                striate' 12 (1/6) ,striate' 12 (1/4),
+                striate' 14 (1/10),striate' 16 (1/8),
+                striate' 16 (1/6),striate' 16 (1/4)] $ n (iter 5 $ (run 4)) # sound"[pip:0]"
+  # gain 1.2
+  |+| cutoff (slow 2 $ sine1 * 2600 + 1000)
+  |+| pan (slow 2 $ sine1)
+  # cut 0
+  # delaytime 0.3
+  # delayfeedback 0.6
+  # delay (slow 10 $ sine1*0.5)
+
+hush
+
+--11/6
+
+d1 $ linger "<0.87>" $ iter 32 $ loopAt 3 $ scramble 16  $ chop 32 $ sound "pi"
+   # speed "1" #cut 0
+  --  # pan rand
+
+d2
+   $ whenmod 5 4  (linger "<0.87>")
+   $ iter 16
+   $ slow 4
+   -- $ loopAt <3 4 5>
+   $ scramble 16
+   $ chop 32
+   $ sound "pip:1"
+   # speed "1" # cut 0
+  --  # pan rand
+
+  hush
+
+
+bps 1.3
+
+d3
+   -- $ linger "<0.87>"
+   $ every 5 (iter 3)
+   $ every 4 (iter 1)
+   $ every 2 (iter 2)
+   $ loopAt "2" $ scramble 16  $ chop 12 $ sound "pip:1"
+   -- # speed (slow 3 $ sine1*2)
+   -- # accelerate "0.6 -0.6"
+   # cut "0"
+   -- |/| speed "1.3"
+   # pan rand
+
+   d3
+      -- $ linger "<0.87>"
+      -- $ every 5 (iter 3)
+      -- $ every 4 (iter 8)
+      -- $ sometimes (within (0.2,0.3) $ jux (stut' 4 0.3 (|+| speed "-1")).(|-| gain 0.4).(iter 5 "0.2 0.3 0.4 0.5" <~ ))
+      -- $ sometimes (within (0.25,5) $ juxBy 0.7 (stut' 6 0.125 (|+| speed "-2")).(slow 4).rev)
+      -- $ every 6 (iter 1)
+      $ loopAt "3" $ scramble 16  $ chop 16 $ sound "[pip:1]"
+      # speed (slow 3 $ sine1*0.5)
+     # accelerate "0.6 -0.6"
+      # cut "1"
+      -- # pan rand
+
+hush
+
+      d2
+        $ slow (3/2) $
+        -- $ striate' 500 (1/10) $
+        off 0.25 (# s "prh:4").(iter 1)
+        $ n (slow 2 $ off 0.125 (+0) $off 0.25 (+2)$ slow 2 $ "{[0 ~] 1 [2(3,8) 3*2] 4*2}") # sound "prh:0"
+        # cutoff (slow 2 $ sine1 * 12000 +1000)
+        # resonance 0.1
+        # room 0 # gain 0.5
+
+hush
+
+
+
+
+
+d3 silence

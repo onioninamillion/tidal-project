@@ -1,0 +1,30 @@
+do 
+    let world p = slow "<2 2 3 4>" $ struct 
+                        (randcat [
+                        "t(3,5,2)",
+                    -- "t(7,16,14)",
+                    "t(11,24,14)",
+                    "t(9,16)",
+                    -- "t(13,24,5)"
+                    "t(4,9)"
+                        ]) $ p
+    d3 
+        $ brak
+        $ jux (off (slow 12 $ segment 16 $ range 0 0.25 $ saw) (slow 1.02).(|- speed 0))
+        $ stack [
+                sew (slow 4 $ bizy) (world $ s "superfork") (s "[superfork*15]")
+                -- # n ("c'min7'4 f'min7'7")
+                |+  n (scale "<yu>" "<[-12 .. <4 8 -4 4>][<2 10 8 9 5> .. <0 -5 -8>]*[2]>" ) 
+                |-  n "12"
+                # lpf (range 1000 6000 $ rand)
+                # lpq 0.1
+        ]
+         # sustain (slow 13 $ range 0.14 1.73 $ saw)
+        --  # attack (world $ 0.1)
+         # cps (slow 3 $ range 0.35 0.08 $ saw)
+        --  # orbit (irand 7)
+        --  + n ( range 0 12 $ smooth $ world $ sine )
+
+scalelist
+
+hush

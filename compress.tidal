@@ -1,0 +1,78 @@
+d1
+  $ stack [ 
+            chunk 4 (jux (rev).(|* speed 1.3))
+            $ sound "byd"
+            + n (iter 3 (run "<2 4>"))
+          , 
+        slow 2
+          $ sometimes (stutWith "<2 3 4>" (0.1625*6) id) 
+          $ sound "~ cp:1"
+          , sound "sn/4"
+          ]
+
+  d2
+    $ stack [
+              fast "1"
+              $ striate' 2000 (1/100) (sound "[tt4b]" |* gain 0.9)
+              , (0.4 <~ ) $ striate' 1200 (1/50) (sound "[tt4b]" |* gain 1 )
+              ,sound "[tt4a]"
+             ]
+    # n (
+      linger "[0.25,0.5,0.33,0.25]"
+      --  "(iter 40 ((run 39)))
+       -- "[11..50]/40"
+       (slow (40) (run 39))
+      )
+    # cut 0
+    # lpf 4000
+    # gain 0.9
+    -- # lpq 0.3
+
+hush
+
+d1 $ slow 32 $ striate' 32 (1/16) $ sound "bev"
+
+d1 $ slow 16 $ striate 32  $ sound "bev"
+
+
+(map (1/) [0.5,1.5..20] ) ++ (map (1/) [0.5,1..15]) ++ [5]
+
+(discretise (1/4) (scale 1 12 $ rand))
+
+d3
+    $ fast "3 2 1"
+    -- $ density "<9,8,7,6,5,4,3,2,1>"
+    $ loopAt 0.4
+    $ sound "tt"
+    # n (iter 5 ((run 10)+1))
+    # cut 1
+    -- # speed 0.05
+    # gain 0.9
+
+hush
+
+d2 $ s "bd"
+
+a
+
+(run 3)
+
+[10,9..1]
+
+cps 1.2
+
+
+--chop striate 之後的調變放左邊
+
+d1
+   -- $ spaceOut ((map (1/) [1.5..15] ) ++ (map (1/) [15..1]))
+   $ fast 2
+   $ loopAt 3.5
+   $ (whenmod 8 0 ((|*| speed "[-1?,-1.2?,1]").(|=| speed (slow 16 (scale 1 1 $ sine1))).(linger "[0.25 0.5 0.75]/4").(rev)))
+   $ striate' 16 (1/20)
+   $ sound "[tt]"
+   -- |=| speed "1 2 3 4"
+   # cut 1
+   # n (iter 40 ((run 40)+10))
+
+hush

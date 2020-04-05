@@ -1,0 +1,240 @@
+asap
+
+d1
+  $ layer [juxBy 0.7 (rev) ,loopAt 20]
+  $ sound "<mf>"
+  # nl
+  # gain 1
+  + begin (degrade $ segment 16 $  range 0 0.95 $ saw)
+  -- # up (degradeBy 0.1 (scale "messiaen5" (run "<2,-1,2,7>")))
+  -- + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+  -- + release (segment 12 $ (smooth "[0.2 0 0 0 0 0 0 4 0 0 0 0 0 0 0 1]"))
+  # cut 1
+  # legato 2
+  # release (choose [1.5,0.7,0.2])
+  # cps 0.5
+  -- # unit "r"
+
+  hush
+
+
+d2
+  $ every 3 (# s "mf")
+  -- $ loopAt 2
+  $ degradeBy 0.4
+  $ chop 6
+  $ s "mb"
+  # gain (choose [1.3,1.2,1])
+  + (fast 3 $ nl)
+  # cut 0
+  # cps (choose [0.26,0.14])
+  + bsaw 1 0 0.95 16
+  + legato ( segment 16 $ range 0.3 4 $ saw )
+  # lpf (slow 1 $ range 3200 1100 $ rand)
+  -- # size ((choose [0.2,0.24,0.1,0.5,0.9])# shrand 23)
+  -- # room ((choose [0.2,0.24,0.1,0.5,0.9]) # shrand 84)
+  # gain 0.5
+
+d1 silence
+
+hush
+
+-- slow motion
+
+do
+  let
+    tpatt = (otrigger saw " 1 _ _ _ 1 _ _ 1 ")
+            -- (trigger 2 $ range 0.1 0.9 $ slow 2 envL)
+    valhadelay = s "midi" # ccn 21 # midichan 0
+    valhamix = s "midi" # ccn 20 # midichan 0
+  p "sample"
+    $ jux (# speed (slow 50 $ range (-0.5) (-1.2) $ saw))
+    $ stack [
+            sound "[mf]"
+            + begin  (segment 16 $ range 0 0.95 $ tpatt )
+            + legato (segment 24 $ range 0.5 ( slow 50 $ range 1 50 $ saw ) $ tpatt )
+            # hold (segment 25 $ range 1 ( slow 50 $ range 1 50 $ saw ) $ tpatt )
+            -- + (slow 50 $ nl)
+            + n 45
+            ]
+            # gain 1
+            # cps 0.8
+            -- # size (slow 1 $ range 0.1 0.6 $ rand)
+            -- # room (segment 16 $ range 0.2  0.7 $ rand)
+            -- # delayfeedback 0.6
+
+hush
+
+-- 雜訊 2
+
+d1
+  -- $ loopAt 12
+  $ sound "mf"
+  # cut 1
+  # unit "c"
+  # nl
+  # gain 1.3
+
+---- 雜訊 1
+
+do
+  let perr = segment 5 $ range (-1) 2 $ perlin2With (slow 4 $ saw*2) (saw*2)
+  -- let cpse = (segment 4 $ choose [0.1,0.3,0.14,0.23] )
+  d2
+    $ loopAt 0.3
+    $ juxBy 0.6 (+ speed (segment "30 132 [30 20]" perr) # shrand 39)
+    $ (spread (striate' 50) [(9/24), (1/30), (1/20), (15/20) , (11/20)] $ sound "mf" )
+    + speed perr
+    + n (slow 136 $ run 136)
+    # cut 0
+    # legato 1
+    # gain 1.4
+    # cps (slow 20 $ range 0.3 0.9 $ saw)
+
+hush
+
+
+
+  :t lpf
+
+ let perr = segment 30 $ range (-1) 3 $ perlin2With (saw*0.7) (saw*2)
+
+ ssaw a b c d = speed (slow a  $segment d $ range b c $ saw )
+
+
+do
+  -- let ffl = (slow "<2 1.2 <1.4 4 10> 1.5 4>" $ smooth ("[-1.01 <12 [-5 24] 40> 0.18 1.2]" ))
+  p "shan"
+    $ slow "<10 4 [2 4 20] [4 1 30] 6 [3 20]>"
+    $ degradeBy 0.7
+    -- $ loopAt (range 0.1 3 $ shrand 13)
+    $ every 5 (sometimes (|+ accelerate "{0.3 -0.9 1 0.5}%16"))
+    -- $ layer [id ,(degradeBy 0.5).(3.5 ~>).(rev)]
+    $ striate' 12 (slow 2 $ segment 4 $ smooth "[0.1 0.4]")
+    -- $ rot "<1 0 1 1 [2 0] [0 1]>"
+    -- $ segment (segment "<1 1 2 5 8 15 21>" $ range 20 500 $ rand)
+    -- $ speed (slow "<2 1.2 <1.4 4 10> 1.5 4>" $ smooth ("[-1.01 <12 [-5 24] 40> 0.18 1.2]" ))
+    $ s "[mf:1 , mb:2, mf:3]"
+    # nl
+    + rsaw 15 5 1 20
+    # size ((slow "<2 1.2 <1.4 4 10> 1.5 4>" $ smooth ("[-1.01 <2 [-5 4] 4> 0.18 1.2]" )))
+    # room 0.2
+    |+ bsaw 14 0 0.95 40
+    # release (range 0.1 "<1.4 2 0.4 5>" $ shrand 442)
+    # cps (slow 12 $ range 0.2 0.7 $ saw)
+    -- + cps "[1 0.75 1.2 1.75 1 0.75]/5"
+    -- # cps 0.5
+
+    hush
+
+    do
+      -- let ffl =  smooth ("[-1.01 <12 [-5 24] 40> 0.18 1.2]" )
+      p "shan"
+        -- $ slow "<10 4 [2 4 20] [4 1 30] 6 [3 20]>"
+        -- -- $ degradeBy 0.8
+        -- $ loopAt (range 0.1 3 $ shrand 13)
+        $ every 5 (sometimes (|+ accelerate "{0.3 -0.9 1 0.5}%16"))
+        -- -- $ layer [id ,(degradeBy 0.5).(3.5 ~>).(rev)]
+        -- -- $ striate' 20 (slow 20 $ segment 10 $ smooth "[0.1 0.4]")
+        -- $ rot "<1 0 1 1 [2 0] [0 1]>"
+        -- $ segment (segment "<5>" $ range 245 500 $ rand)
+        $ pan ( smooth ("[-1.01 <12 [-5 [14]] 40> 0.18 1.2]" ))
+        $ speed ( smooth ("[-1.01 <2 [-5 [1.21]] 1.2> 0.18 1.2]" ))
+        # s "mf"
+        # cut 1
+        # fast 1 nl
+        -- # size (smooth ("[-1.01 <2 [-5 4] 4> 0.18 1.2]" )))
+        # room 0.2
+        |+ bsaw 14 0 0.95 40
+        # release (range 0.1 4 $ shrand 442)
+        # gain 0.3
+        -- # cps (slow 120 $ range 0.2 0.7 $ saw)
+        -- + cps "[1 0.75 1.2 1.75 1 0.75]/5"
+        -- # cps 0.5
+
+
+hush
+
+let a = "<[12 4] [24 10] [8 20]>"
+in
+d1
+  $ slow 3
+  $ every 7 (+ n 10)
+  $ every 8 (+ n 20)
+  -- $ loopAt 1.5
+  $ chunk 10 ((+ begin (slow a $ (run a)*1)).rev.(+ speed 0.75))
+  $ inside 4 (whenmod 8 2 ((slow 2).(+ speed ((range (-1) 3 $ perlin2With (saw*0.5) (sine*2))))))
+  $ striate a
+  $ sound "mf"
+  -- # n (slow 136 $ run 136)
+  -- # end (slow 2 $ (run a)*(slow 10 $ range 0.4 1 $ sine) )
+  # cps 0.8
+  # cut 1
+
+
+  p "tin"
+  $ layer [(#size 0.7).(# room 0.7).(0.2 <~)]
+  $ juxBy 0.8 ((slow 1.01).(0.01<~))
+  $ degradeBy 0.5
+  $ loopAt 8
+  $ sound (slow "<2 3 1 1>"  $ segment 3 $ choose ["mb","mf"])
+  -- + begin (fast 1 $ smooth $ segment 16 $ range 0.1 0.9 $saw)
+  + gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
+  + release (segment 36 $ (smooth "[0.2 0 0 0 0 0 0 4 0 0 0 0 0 0 0 1]"))
+  # up (degradeBy 0.2 (scale "messiaen5" (run "<10,-14,20,0.3>")))
+  + up (slow 16 $  smooth ( "[20 0 -12 0 0 0 0 4 0 0 24 0 0 0 0 10]" ) )
+  # hold (choose [0.1,0.2,0.7,2,3,1])
+--   # hold 0.1
+  + nl
+  # cps (slow 20 $ segment 16 $ rangex 0.5 1 $ saw)
+
+
+
+  hush
+
+  scaleList :: String
+
+
+  d2
+  -- $
+  -- $ chop 12
+  -- $ off 1 (+ n (irand 100))
+  $ sound "mf"
+  -- + release (segment 20 $ range 2 1.15 $ trigger saw "1 _ _ _ 1 _ _ 1 " )
+  + begin  (segment 24 $  range 0 0.95 $ otrigger saw "1 _ _ _ 1 _ _ 1 " )
+  + legato (segment 25 $  range 0.1 (slow 50  $ range 1 40 $ saw ) $ otrigger saw "1 _ _ _ 1 _ _ 1 " )
+  # (slow 50 $ nl)
+  -- # cps (segment 1 $ range 0.5 0.8 $ rand )
+  -- # unit "s"
+
+  hush
+
+  let
+
+d3 $ s "midi" # ccn 21
+
+hush
+
+
+
+
+             -- +(slow 50 $ nl )
+  p "cc"
+    $ stack [
+              valhadelay + ccv (slow 5 $ range 100 127 $ tpatt)
+              ,
+              valhamix + ccv (segment 16 $ range 100  50 $ tpatt )
+    ]
+
+  hush
+
+
+  d1 $ sound "bd*2 cp:4(5,8,<0 2>)"
+  # gain (trigger 1 $ slow 2 envL)
+
+  d1 $ sound "bd*2 cp:4(5,8,<0 2>)"
+  # djf (trigger 2 $ range 0.1 0.9 $ slow 2 envL)
+
+  d1 $ sound "cp*32" # gain ( range 0.7 1 $ every 3 (slow 2) $ otrigger saw " 1 _ _ _ 1 _ _ 1 " )
+
+  d1 $ sound "cp*12" # gain ( range 0.7 1 $ trigger 1 saw )

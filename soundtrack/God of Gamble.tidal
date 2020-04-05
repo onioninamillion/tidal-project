@@ -1,0 +1,18 @@
+--n1~n4 loop
+
+d1
+  -- $ loopAt 2
+  $ every 7 (within (0,0.5) $ scramble 3)
+  $ inside 6 (
+              (every 3 ( # begin (choose[0.25,0.75])))
+             .(off 0.2 (+| speed "<2 1>").(+| end 0.4 ))
+              )
+  $ sound "gog:0"
+  + n "[<0 1 2> .. [2 1]]"
+  # cut 1
+
+:t scramble
+
+:t coarse
+
+hush

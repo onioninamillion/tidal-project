@@ -1,0 +1,209 @@
+let 
+    jat a b = slow (a/b) $ (euclidFull (round <$> (a-1)) (round <$> (a)) 0.7 1) 
+    chatusra a b = selectF (a-2) [
+            (struct (select (b/3) ["[t ~ ~ t]" ,"[t t]","[t t ~ ~]" ])),
+            (struct (select (b/3) ["[t [t t]]" ,"[t t ~ t]","[[t t] t]"]))
+            ] 
+    khanda a b = selectF ((a-2)/2) [
+            -- 2 note
+            (struct (select (b/4) ["[t ~ ~ ~ t]" ,"[t t ~ ~ ~]","[t ~ ~ t ~]","[t ~ t ~ ~]" ])),
+            -- 3 note
+            (struct (select (b/6) ["[t ~ ~ t t]" ,"[t t ~ ~ t]","[t t t ~ ~]","[t ~ t ~ t]" ,"[t ~ t t ~ ]","[t t ~ t ~]"])),
+            -- 4 note
+            (struct (select (b/4) ["[t ~ t t t]" ,"[t t ~ t t]","[t t t ~ t]","[t t t t ~]" ]))
+            ] 
+    tisra a b = selectF ((a-2)/3) [
+            -- 2 note
+            (struct (select (b/5) ["[t ~ ~ ~ ~ t]" ,"[t t ~ ~ ~ ~]","[t ~ ~ ~ t ~]","[t ~ t ~ ~ ~]" ,"[t ~ ~ t ~ ~]" ])),
+            -- 3 note
+            (struct (select (b/10) ["[t ~ ~ ~ t t]" ,"[t t ~ ~ ~ t]","[t t t ~ ~ ~]",
+                                    "[t ~ ~ t ~ t]" ,"[t ~ ~ t t ~]","[t ~ t t ~ ~]","[t ~ t ~ ~ t]","[t t ~ t ~ ~]","[t t ~ ~ t ~]",
+                                    "[t ~ t ~ t ~]"])),
+            -- 4 note
+            (struct (select (b/10) ["[t ~ ~ t t t]" ,"[t t ~ ~ t t]","[t t t ~ ~ t]","[t t t t ~ ~]",
+                                    "[t ~ t ~ t t]" ,"[t ~ t t t ~]","[t t t ~ t ~]","[t ~ t t ~ t]","[t t ~ t t ~]","[t t ~ t ~ t]"])),
+            -- 5 note
+            (struct (select (b/5) ["[t ~ t t t t]" ,"[t t ~ t t t]","[t t t ~ t t]","[t t t t ~ t]","[t t t t t ~]" ]))
+                                    ] 
+    misra a b = selectF ((a-2)/4) [
+            -- 2 note
+            (struct (select (b/6) ["[t ~ ~ ~ ~ ~ t]","[t t ~ ~ ~ ~ ~]",
+                                   "[t ~ ~ ~ ~ t ~]","[t ~ t ~ ~ ~ ~]",
+                                   "[t ~ ~ ~ t ~ ~]","[t ~ ~ t ~ ~ ~]"])),
+            -- 3 note
+            (struct (select (b/15)["[t ~ ~ ~ ~ t t]","[t t ~ ~ ~ ~ t]","[t t t ~ ~ ~ ~]",
+                                   "[t ~ ~ ~ t ~ t]","[t ~ ~ ~ t t ~]","[t ~ t t ~ ~ ~]","[t ~ t ~ ~ ~ t]","[t t ~ t ~ ~ ~]","[t t ~ ~ ~ t ~]",
+                                   "[t ~ ~ t ~ t ~]","[t ~ t ~ ~ t ~]","[t ~ t ~ t ~ ~]",
+                                   "[t ~ ~ t ~ ~ t]","[t ~ ~ t t ~ ~]","[t t ~ ~ t ~ ~]"
+                                   ])),
+            -- 4 note
+            (struct (select (b/17)["[t ~ ~ ~ t t t]","[t t ~ ~ ~ t t]","[t t t ~ ~ ~ t]","[t t t t ~ ~ ~]",
+                                   "[t ~ ~ t ~ t t]","[t ~ ~ t t ~ t]","[t ~ ~ t t t ~]","[t ~ t ~ ~ t t]","[t ~ t t ~ ~ t]","[t ~ t t t ~ ~]","[t t t ~ t ~ ~]","[t t ~ t t ~ ~]","[t t ~ t ~ ~ t]",
+                                   "[t ~ t ~ t ~ t]","[t ~ t ~ t t ~]","[t ~ t t ~ t ~]","[t t ~ t ~ t ~]"])),
+            -- 5 note
+            (struct (select (b/15)["[t ~ ~ t t t t]","[t t ~ ~ t t t]","[t t t ~ ~ t t]","[t t t t ~ ~ t]","[t t t t t ~ ~]",
+                                    "[t ~ t ~ t t t]","[t ~ t t ~ t t]","[t ~ t t t ~ t]","[t ~ t t t t ~]","[t t ~ t ~ t t]",
+                                    "[t t ~ t t ~ t]","[t t ~ t t t ~]","[t t t ~ t ~ t]","[t t t ~ t t ~]","[t t t t ~ t ~]"])),
+            -- 6 note
+            (struct (select (b/6) ["[t ~ t t t t t]" ,"[t t ~ t t t t]","[t t t ~ t t t]","[t t t t ~ t t]","[t t t t t ~ t]","[t t t t t t ~]" ]))
+                         ] 
+        
+        
+
+
+d1 
+$ sound "{sn bd hh}"
+|* gain "{1.3 ~ ~ ~}%3"
+# cps 2 
+
+==
+
+d1 
+$ sound "{sn bd hh}"
+|* gain "{~ ~ ~,1.3 ~ ~ ~}"
+# cps 2 
+
+"{~ ~ ~,1.3 ~ ~ ~}" == "{1.3 ~ ~ ~}%3"
+--[sn] bd hh sn [bd] hh sn bd [hh] sn bd hh
+
+
+d1 
+$ sound "bd*3"
+|* gain "{1 1 1,1.3 ~ ~ ~ ~ }"
+# cps 2
+
+==
+
+d1 
+$ sound "bd*3"
+|* gain "{1.3 1 1 1 1}%3"
+# cps 2
+
+d1 
+$ sound "{sn bd hh}"
+|* gain "{1.3 1 1 1}%3"
+# cps 2 
+
+
+
+d1 
+$ degradeBy 0.3
+$ misra 6 (slow 4 $ irand 20)
+$ sound (choose ["tabla"])
+|* gain (((slow 7 $ saw) <~) "{1.4 1 1 1 1 1 1 1 1}%7")
+# nr
+# cps 1.3 
+
+
+hush
+
+
+let 
+    c3 = "{1.3 1 1}%4"
+    c5 = "{1.3 1 1 1 1}%4"
+    c7 = "{1.3 1 1 1 1 1 1}%4"
+    t4 = "{1.3 1 1 1}%3"
+    t5 = "{1.3 1 1 1 1}%3"
+    t7 = "{1.3 1 1 1 1 1 1}%3"
+    k3 = "{1.3 1 1}%5"
+    k4 = "{1.3 1 1 1}%5"
+    k7 = "{1.3 1 1 1 1 1 1}%5"
+    m3 = "{1.3 1 1}%7"
+    m4 = "{1.3 1 1 1}%7"
+    m5 = "{1.3 1 1 1 1}%7"
+    td4 = "{1.3 1 1 1}%6"
+    td5 = "{1.3 1 1 1 1}%6"
+    td7 = "{1.3 1 1 1 1 1 1}%6"
+
+d1 
+$ s "bd*4"
+# gain (cat [(c7)])
+
+hush
+
+------------------------------
+
+d1 $ sound "bd*4" # gain (slow (3/4) (euclidFull 2 3 0.7 1)) # cps 1 
+
+d1 $ sound "bd*4" # gain (slow (5/4) (euclidFull 4 5 0.7 1)) # cps 1 
+
+d1 $ sound "bd*4" |+ gain (slow (7/4) (euclidFull 6 7 0.7 1)) # cps 1 
+
+
+let jat a b = slow (a/b) $ (euclidFull (round <$> (a-1)) (round <$> (a)) 0.7 1) 
+
+--------
+P.21
+1) Both layers keep the same gati, but use different jathis
+In this option, both performers or layers have the common denominator of sharing the same gati but, as a
+result of using different jathis, they produce different ‘metres’ or structures. For instance, if chatusra jathi 3
+is used in one layer and chatusra jathi 5 in the other layer, they will effectively be producing a 3/4 working
+against a 5/4. Both layers will not only produce crossing accents individually, but they will indeed bring
+forth a polymetre or polyrhythm that will need a longer interval to meet at a given point.
+
+
+d1
+$ layer [id,(# gain (jat 3 7)).(#speed 2).(# s "cp")] 
+$ sound "bd*7" 
+# gain (jat 5 7) # cps 0.5
+
+
+d1
+$ layer [id,(# gain (jat 3 5)).(#speed 2).(# s "cp")] 
+$ khanda 4 6 $ sound "bd" 
+# gain (jat 7 5) # cps 1.2
+
+d2 $ s "cp"
+
+hush
+
+d1
+$ sound "cp*5" 
+# gain (jat 3 5) 
+
+
+d2
+$ sound "bd*5" 
+# gain (jat 4 5) # cps 0.7
+
+
+-------
+2) Both layers keep the same jathi, but use different gatis
+In this option, both performers or layers play ‘the same phrase’ (jathi here also means phrase) but, due to
+the fact that the phrase or jathi is performed in two different gatis, the listener perceives two different
+pulses or tempi played simultaneously.
+
+
+
+
+------
+3) Both layers use different gati and jathi
+This option is a combination of the two previous concepts: longer structures of polymetres or polyrhythms
+mixed with the perception of both layers having two different tempi.
+
+d1
+$ khanda 4 (irand 12)
+$ sound "cp:3*5" 
+# gain (jat 7 5) 
+
+
+d2
+$ chatusra 3 (irand 12)
+$ sound "bd" 
+# gain (jat 5 4) # cps 2.2
+
+hush
+
+-------
+
+d1
+$ chatusra 3 (slow 5 $ run 4)
+$ sound "bd" 
+# cps 2.2
+
+hush
+
+d2
+$ chatusra 3 (slow 5 $ run 4)
+$ sound "bd" 
+# gain (jat 4 5) # cps 2.2

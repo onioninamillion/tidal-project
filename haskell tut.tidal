@@ -1,0 +1,67 @@
+inc :: Num a => a -> a
+inc x = x+1
+
+double :: Int -> Int
+double x = 2 * x
+
+square :: Int -> Int 
+square x = x * x
+
+average :: Float -> Float -> Float
+average a b  = (a + b) / 2.0
+
+
+Excersise
+
+2.
+inc (square 5)
+square (inc 5)
+
+average (inc 3) (inc 6)
+
+:t average
+
+5.
+
+showResult :: Show a => a -> String
+showResult x = "the result is " ++ (show x)
+
+showResult 13
+
+:t show
+
+6.
+
+circleArea :: Floating a => a -> a
+circleArea radius  = pi * radius * radius
+
+showAreaOfCircle :: Show a => a -> String
+showAreaOfCircle x = "The area of a circle with radius " ++ (show x) ++ "cm is about " ++ (show (circleArea x)) ++ "  cm^2"  
+
+
+showAreaOfCircle 5
+
+show (circleArea 5)
+
+:t (+)
+
+3 + 4
+
+
+f1 x = show x
+
+:t f1
+
+f2 = \x -> show x
+
+:t f2
+
+f2 3.3
+
+:t 
+
+fun = isDigital :: char -> bool
+
+isDigital 133
+
+:t isDigital

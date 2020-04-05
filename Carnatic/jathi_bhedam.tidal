@@ -1,0 +1,116 @@
+--chatasura 9 beat = 36 
+--7 4 5 3 3 1 5 2 3 3 = 36
+
+d3 $ s "cp:1" + n (scan 8 ) # gain 0.7  # bpm 100
+
+hush
+
+d2 
+$ every 5 ((#s "cp:1").(# gain 0.7))
+$ s "sn" 
+
+d2 silence
+
+---
+jathis :: Rational -> Pattern a -> Pattern a -> [Int] -> Pattern a
+jathis perCycle a b xs = sew boolStep a b
+  where boolStep :: Pattern Bool
+        boolStep = _slow ((toRational $ sum xs) / perCycle) $ listToPat $ list xs
+        list :: [Int] -> [Bool]
+        list [] = []
+        list (x:xs) = (True:(replicate (x-1) False)) ++ list xs
+
+d1
+$ degradeBy 0.3
+$ whenmod 7 5 (chunk 3 (fast 2)) 
+$ khanda 4 (slow 4 $ "13 45 12 23")
+$ sound "tabla*5" 
+# (gain $ jathis 5 1 0.6 [7,4,5,3,3,1,5,2,3,3]) 
+# n (choose [7,5,6]) 
+# cps 1
+
+hush
+
+
+d1
+$ degradeBy 0.3
+$ whenmod 7 5 (chunk 3 (fast 2)) 
+$ chatusra 3 (slow 4 $ "13 45 12 23")
+$ sound "tabla*4" 
+# (gain $ jathis 4 1 0.7 [7,4,5,3,3,1,5,2,3,3]) 
+# n (choose [7,5,6]) 
+# cps 1.3
+
+
+hush
+
+do
+  let jathi =  (jathis 5 1 0.8 [7,7,5,6,4,4,5,1,3,3])
+      jathip = (jathis 5 0.8 0.2  [7,7,5,6,4,4,5,1,3,3])
+  d1
+    $ degradeBy 0.2
+    $ khanda 5 (irand 45)
+    $ stack [ 
+            (240 <~)
+            $ within (0.2,1) (plyWith "<3 4 4>" (|+ n "1 2 3 4 5"))
+            $ sound "tabla*5" # speed 0.99 # pan (jathip) 
+            # n (choose [7,5,6]) ,
+            s "qin01*5" # nr # pan ((0.2 <~ ) $ jathip) # cut 1 * speed (choose[1,-1,-1-1])
+            ]
+    # (gain $ jathi) 
+    # cps 1
+
+            
+hush
+            
+d2 
+$ grita $ s "red1" 
+# n "<7 12 0>" 
+- n 4 
+# up "<7 12 0>" - 3   
+# gain 0.9
+
+
+            do
+  let jathi =  (jathis 5 1 0.8    [7,7,5,6,4,4,5,1,3,3])
+      jathip = (jathis 5 0.8 0.2  [7,7,5,6,4,4,5,1,3,3])
+  d1
+    $ degradeBy 0.1
+    $ tisra 3 (irand 50)
+    $ stack [ 
+            (240 <~)
+            $ within (0.2,1) (plyWith "<3 4 4>" (|+ nl))
+            $ sound "tabla*3" # speed 1.1 # pan (jathip) 
+            # n (choose [7,5,6,3]) ,
+            plyWith 10 ((+ lpf 200).(+ n 1)) $
+            s "qin01*3" # nr # pan ((0.2 <~ ) $ jathip) # cut 0 * speed (-1)
+            ]
+    # (gain $ jathi) 
+    # cps 1
+
+
+do
+  let jathi =  (jathis 5 1 0.6    [7,7,5,6,4,4,5,1,3,3])
+      jathip = (jathis 5 0.8 0.2  [7,7,5,6,4,4,5,1,3,3])
+  d1
+    -- $ degradeBy 0.1
+    -- $ within (0,1) (plyWith "<3>" (|+ n 1))
+    -- $ tala (cF 0 "0") (range 1 6 (cF 0 "1")) 12 
+    $ stack [
+            g $   
+            (240 <~)
+            $ sound "tabla*7" # speed 1.2 # pan (jathip) 
+            # n (choose [7,5,6,3]) ,
+            s "lshocut*5"
+            -- # nl
+            # cut 1 
+            + n (jathis 5 5 0 [7,7,5,6,4,4,5,1,3,3]) 
+            # (gain $ jathi) 
+            -- # pan ((0.2 <~ ) $ jathip) # cut 1 # begin (rand)
+            ]
+    # cps 0.4
+
+
+hush
+
+    

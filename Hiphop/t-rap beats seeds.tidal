@@ -1,0 +1,50 @@
+K-HOW高浩哲 - 卍 遇到 卍 (Official Video)
+
+let sn_ = 
+    
+setcps (122/120/1)
+
+d1 $ struct (cat ["[[~ t] ~ t ~]*2","[[~ t] ~ t ~]"])$ s "sn:5"
+
+d1 $ fast 2 $ struct (cat ["[[~ t] ~ t ~]","[[~ t] ~ t ~]","[[~ t] ~ t [~ t]]","[[~ t] ~ t ~]"]) $ s "sn:5"
+
+d5 silence
+
+d5
+$ every 2 (stutWith 2 (0.0625*3) (|* gain 0.7))  
+$ ((1/16) ~> ) $ s "sn:5*2"
+
+
+d1
+$ fast 2
+$ every 1 (stutWith 2 (0.0625*3) (|* gain 0.7))
+$ every 4 (stutWith 3 (0.125*3) (|* gain 0.7)) 
+-- $ stutWith 3 (0.125*3) (|* gain 0.7)  
+$ ((1/8) ~> ) $ s "sn:5"
+
+
+(1/16)
+
+d1 $ fast 2 $ struct "t(3,8,0)" $ s "sn:2! ~"
+
+d2 $ struct (cat ["[t [~ t] ~ [~ t] ~ [~ t] [ ~ t] [ ~ <t ~>]]" ,"[t [~ t] ~ [~ t] ~ [t] [~ t] [ ~ t]]"  ]) $ s "808bd:2" # gain 1.8
+
+d3 
+   $ every 2 ( within ((8/16),(9/16)) (fast 2)
+)   $ s "hh:9*16" 
+   # cps (83 /120/2)
+
+d4  $ rev $ loopAt 4 $ chop 16 $ s "bev" # cut 1
+
+
+d5  $ slow 1 $ s "bass:1*4" # gain 1
+ 
+:t struct
+
+d5 silence 
+
+hush     
+
+all id 
+
+all ((bite 8 "0*2 1*2 2*3 3*4 4 5 6 7 ").(+ n "[1 .. 10]/10"))

@@ -1,0 +1,139 @@
+Beat-preserving polymetre 5/4 with 4/4
+
+d1 
+$ s "superfork"  + n "{0 2 2 2 2 , 12 7 7 7}"
+# bpm 100
+
+Beat-preserving polymetre 5/4 c 3/4
+
+d1 
+$ s "superfork" + n "{0 2 4 5 7, 12 7 7}"
+# bpm 70
+
+Beat-preserving polymetre 3/4 c 5/4
+
+d1 
+$ s "superfork"  + n "{12 7 7,0 2 4 5 7}"
+# bpm 70
+
+==
+
+d1 
+$ s "superfork"  
++ n "{0 2 4 5 7}%3"
+# bpm 70
+
+hush
+
+d1
+$ s "superfork"  + n (cat ["{12 7 7,0 2 4 5 7}","{0 2 4 5 7, 12 7 7 }"])
+# bpm 100
+
+
+
+d1
+$ sew bizy (n "{12 7 7,0 2 4 5 7}") (n "{0 2 4 5 7, 12 7 7 }") 
+# s "superfork"  
+# bpm 120
+
+Beat-preserving polymetre 2/4 with 3/8 ?
+
+d1
+$ s "superfork"  + n "{0 2 4,12 7}"
+# bpm 80
+
+
+d1
+$ s "superfork"  + n "{0 12}%6"
+# bpm 80
+
+==
+
+d1
+$ s "superfork"  + n "{~ ~ ~ ~ ~ ~ ,0 12}"
+# bpm 80
+
+
+d1
+$ s "superfork"  + n "{0 7 12}%5"
+# bpm 80
+
+==
+
+d1
+$ s "superfork"  + n "{~ ~ ~ ~ ~,0 7 12}"
+# bpm 80
+
+d1
+$ stack [s "superfork"  + n "{0 7 12}%5"
+        ,s "superfork"  + n "5 ~ ~ ~ ~"
+        ]
+# bpm 80
+
+
+d1
+$ stack [s "superfork"  + n "{0 4 7 12}%7"
+        ,s "superfork"  + n "-12 -5"
+        ]
+# bpm 80
+
+
+Beat-preserving polymetre 2/4 with 3/8 
+
+
+d1
+$ stack [fast 2 $ s "superfork"  + n "{0 7 12}%2"
+        ,s "superfork"  + n "-12 -5"
+        ]
+# bpm 80
+
+Beat-preserving polymetre 4/4 with 5/8
+
+d1
+$ stack [
+         fast 2 $ 
+         s "superfork"  + n "{7 0 7 0 12}%4"
+        ,s "superfork"  + n "-12 -5 -17 -5"
+        ]
+# bpm 70
+
+
+
+d1
+$ stack [
+         fast (segment 5 $ (wchoose [(1,0.1),(2,0.7),(3,0.4),(4,0.1),(5,0.15),(6,0.14),(7,0.07)])) $ 
+         s "superfork"  + n "{7 3 7 10 14}%4" 
+        ,s "superfork"  + n "-12 -5 -17 -5" 
+        ,s "byd:4*8" # gain 0.7
+        ,dg 0.6 $ fast 4 $ s "cp:2" + n "{7 0 7 7 12}%6" # gain 0.5
+        ]
+# bpm 65
+
+
+hush
+
+d1
+$ stack [fast 2 $ s "superfork"  + n "{12 2 4 5 7 9 10}%5"
+        , s "superfork"  + n "{-12 -5 -17 -5 [-14 -10]}%5"
+        ]
+# bpm 80
+
+==
+
+
+d1
+$ stack [
+          fast 2 $ s "superfork"  + n "{12 2 4 5 7 9 10}%4"
+        , fast 2 $ s "superfork"  + n "{-12 -5 -17 -5 -14}%4"
+        , s "cp" # gain 0.7
+        ]
+# bpm 120
+
+
+hush
+
+d2 
+$ s "cp"
+# orbit 0
+
+hush

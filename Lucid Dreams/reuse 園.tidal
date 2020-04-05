@@ -1,0 +1,339 @@
+  s (segment 16 $ choose ["greta","sleep","ama","amanext"]) # cut 0 
+  
+  # hold ((choose [0.1,0.2,0.7,2,3,1]) # shrand 10)
+
+
+p "flick"
+$ slow 10
+$ degradeBy 0.5
+$ layer [(#size 0.3).(# room 0.7).(0.2 <~)]
+$ juxBy 0.8 ((slow 1.01).(0.01<~))
+$ striateBy 100 (1/100) 
+$ sound (segment 4 $ choose ["sleep"])
++ begin (segment 16 $ range 0.1 0.9 $saw)
+-- + gain  (fast 1 $ smooth $ segment 16 $ range 0.5 1 $saw)
++ release (segment 12 $ (smooth "[0.2 0 0 0 0 0 0 4 0 0 0 0 0 0 0 1]")) 
+-- |+ up  (slow 4 $  smooth ( "[7 0 12 0 0 0 0 2 0 0 -5 0 0 0 0 1.5]" ) )
+|+ speed  (slow 16 $ range (-0.5) 1 $ perlin + 0.3 ) 
+-- # hold (smooth (choose [0.1,0.2,0.7,2,3,1]) # shrand 10)
+# n 11
+# cps (slow 20 $ segment 16 $ rangex 0.5 1 $ saw)
+-- # accelerate ((choose [21,12.5,-26,-30,13]) # shrand 486)
+-- # speed (-1)
+
+hush
+
+
+d1 
+$ slow 4
+$ chop 100
+$ s "sleep:5"
+# cps 0.2
+# attack 0.14
+# release 1
+
+
+
+d1 
+$ slow 2
+$ weaveWith 11.1 (s "sleep:10" + begin (osc 8 0 0.95 saw 32 ))
+[
+(# speed 1.4),
+(# speed 1)
+]
+# cps 0.2
+# attack 0.14
+# release 1
+
+---
+
+d1 $ weaveWith 6 ( s "cym" )
+  [
+      -- fast 2,
+   (+| speed (trigger 1 $ segment 1 $ range 0.5 1.2 $ slow 10 envL)),
+   (+| speed  (trigger 1 $ segment 3 $ range 0.2 2 $ slow 7 envL )),
+   (+| cps  (trigger 1 $ segment 2 $ range 0.2 3 $ slow 15.7 envL)).(# pan 0),
+   (+| hold (trigger 1 $ segment 4 $ range 0 0.1 $ slow 15.6 envL)),
+   (+| begin (trigger 1 $ segment 4 $ range 0 1 $ slow 14 envL))
+  --  (+| accelerate (trigger 1 $ degradeBy 0.4 $ segment 4 $ range 12 0 $ slow 4 envL))
+   --  stutWith 3 0.15 (# comb (range 0 0.5 $ slow 13 $ sine))
+  ]
+  # cut 0
+  # nl
+  -- # attack 0.4
+  -- # hold 4
+
+
+hush
+
+---------------M Layer  
+
+shift p = (1 <~)  p
+shift' x p = (x <~) p
+
+let
+  shift p = (1 <~)  p
+  shift' x p = (x <~) p 
+  shrand n = shift' n $ rand
+  nshrand  n = shift' n $ irand 100
+  rs = (release $ range (2) 1 $ rand) # shrand 1333
+  sl p = layer [(|+ n (nshrand 34)).(# rs),(|+ n (nshrand 5514)).(# rs),(|+ n (nshrand 4425)).(# rs),(|+ n (nshrand 226)).(# rs),(|+ n (nshrand 44)).(# rs)] $ p
+
+hush
+
+d1 
+$ degradeBy 0.2
+$ superimpose (
+              (# gain (osc64 (slow 23 $ range 0.5 32 $ sine) 0.6 1 sine )).      
+              (degradeBy (trigger 1 $ slow 50 $ range 0.2 0.6 $ envL)).
+              -- (# up (slow (slow 32 $ range 0.15 12 $ sine) $ smooth $ "24 12")).
+              ((|+ cps  (trigger 1 $ segment 16 $ range 0.12 4 $ slow 35.7 envL)).(# pan (slow (slow 23 $ range 0.5 32 $ sine) $ range 0.2 0.8 $ sine))).
+              (# begin (trigger 1 $ slow "40" $ range 0 0.8 $ envL)).
+              (+ speed (trigger 1 $ slow "60" $ range 12.1 12 $ envL)).
+              (# hpf (trigger 1 $ slow 20 $ range 200 10000 $ envL))
+              )
+$ s "pa1:0"
+-- + begin (osc64 14 0.01 0.91 sine)
++ begin (trigger 1 $ slow 15 $ range 1 0  $ envL)
+# atrl (choose [1.4,0.2,0.4]) (choose [8,5,3])
+-- * speed (-1)
+-- # accelerate (choose [-0.05,0.03])
++| cps (slow (slow 23 $ range 0.5 32 $ sine) $ range 0.25 0.05 $ saw)
+-- # cut 1
+
+hush
+----pa02 layer 2 
+
+d1 
+$ degradeBy 0.5
+$ superimpose (
+              -- (# gain (osc64 (slow 23 $ range 0.5 32 $ sine) 0.6 1 sine )).      
+              (degradeBy (trigger 1 $ slow 50 $ range 0.2 0.6 $ envL)). --CC This
+              -- (# up (slow (slow 32 $ range 0.15 12 $ sine) $ smooth $ "24 12")).
+              ((+| cps  (trigger 1 $ segment 16 $ range 0.12 3 $ slow 35.7 envL)).(# pan rand)).
+              (# begin (trigger 1 $ slow "40" $ range 0 0.8 $ envL)).
+              -- (+ speed (trigger 1 $ slow "60" $ range 12.1 (12) $ envL)).
+              (# hpf (trigger 1 $ slow 20 $ range 200 10000 $ envL))
+              )
+$ s "pa1:2"
++ begin (osc 15 0.01 0.91 sine 5)
+-- + begin (trigger 1 $ slow 15 $ range 1 0  $ envL)
+# atrl (choose [0.7,0.4,0.4]) (choose [4,5,3])
+-- * speed (-1)
+# accelerate (choose [-0.09,0.09])
++| cps (slow (slow 32 $ range 0.5 32 $ sine) $ range 0.25 0.05 $ saw)
+-- # cut 1
+
+hush
+
+
+d1 $ sound "pa1:0"
+
+
+do 
+  let
+    shift p = (1 <~)  p
+    shift' x p = (x <~) p 
+    shrand n = shift' n $ rand
+    nshrand  n = shift' n $ irand 100
+    rs = (release $ range (21) 1 $ rand) # shrand 1333
+    sl p = layer [(|+ n (nshrand 34)).(# rs),(|+ n (nshrand 5514)).(# rs),(|+ n (nshrand 4425)).(# rs),(|+ n (nshrand 226)).(# rs),(|+ n (nshrand 44)).(# rs)] $ p
+  d1 
+  $ slow 1
+  $ weaveWith 8 ( sl $ s "trk1ts" )
+    [
+        -- fast 2,
+    -- (+| speed (trigger 1 $ segment 1 $ range 0.5 1.2 $ slow 10 envL)),
+    -- (+| speed  (trigger 1 $ segment 3 $ range 0.2 2 $ slow 7 envL )).(# pan rand),
+    (+| cps  (trigger 1 $ segment 5 $ range 0.12 3 $ slow 15.7 envL)).(# pan 0),
+    (+| hold (trigger 1 $ segment 4 $ range 0 0.1 $ slow 15.6 envL))
+    -- (+| begin (trigger 1 $ segment 4 $ range 0 1 $ slow 14 envL))
+    --  (+| accelerate (trigger 1 $ degradeBy 0.4 $ segment 4 $ range 12 0 $ slow 4 envL))
+    --  stutWith 3 0.15 (# comb (range 0 0.5 $ slow 13 $ sine))
+    ]
+    # cut 0
+    -- # nl
+    -- # attack 0.4
+    -- # hold 4
+
+
+hush
+
+
+
+hush
+
+
+---- irand 
+d1 
+$ s "trk1ts" |+ n (irand 33)
+# cps 0.4
+
+d1 
+$ s "trk1ts" # n (irand 2)
+# cps 0.4
+
+d1 
+$ s "trk1ts" + n (irand 2)
+# cps 0.4
+
+         (|+ n (nshrand 400)).(# pan 0),
+         (degradeBy 0.3).(|+ nl) .(# pan (slow (slow 32 $ range 0.15 12 $ sine) $ range 0.7 0.3 $ sine)).(+ speed (slow (slow 32 $ range 0.15 12 $ sine) $ range 12 5 $ sine))
+         ,(# atrl 0.15 0.4)
+        --(|+ n (irand 3311)).(# pan 0.1)
+]
+-- $ struct (bizy)
+$ s "trk1ts"  
+-- + speed (range 0 5 $ slow 1 $ segment 12 $ sine)
+# cps  (slow (slow 32 $ range 0.15 12 $ sine) $ range 0.25 5 $ saw)
+# speed "[0.28]"
+-- # bpf "[100,60,390,4500]"
+
+
+
+
+hush
+
+
+d1 $ sound "kins2" # speed (cF 1 "0")
+
+
+scaleList :: String
+
+do 
+p "unt"
+-- $ resetCycles
+-- $ sometimes ((slow 20).(rev))
+$ degradeBy 0.3
+$ layer [   
+            (loopAt 0.1).(# pan (slow (scan 20) $ range 0.25 0.75 $ sine)) 
+            , 
+            (scramble 12).(loopAt 0.1).(# accelerate ((choose [-0.3,0.3,-0.5,0.6,0.1]) # shrand 30)) 
+          , (# speed (perlin + (slow 12 $sine*1.3))).(loopAt 2).(|* gain (slow 26 $ range 0.5 1 $ sine))
+        ]
+$ sound (segment 8 $ choose ["re1","re2","re4","re5","re6","re7","re3"]) 
+|+ bsin 15 0 0.9 24
++ gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
++ release (segment 25 $ (smooth "[0.2 0 0 5 0 0 0 4 0 0 0 0 0 0 0 1]"))
+# cut 0
+# hold (choose [0.4,1.8,0.7,2,3,1])
+|* gain 1.1
+# up (degradeBy 0.5 (scale "messiaen5" (run "<10,-14,20,0.3>")))
++ nl
+# cps (slow 40 $ segment 16 $ rangex 1 0.3 $ saw)
+-- # hbrick 0.4
+
+hush
+
+---------------------------------------LAYER   2 -------------------------------------------------------
+
+p "tin layer2"
+-- $ rev
+-- $ layer [(#size 0.1).(# room 0.7).(0.02 <~)]
+-- $ juxBy 0.8 ((slow 1.01).(0.01<~))
+-- $ degradeBy 0.2
+$ sound (slow "<2 3 1 1>"  $ segment 10 $ choose ["trk1ts"])
++ gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
++ release (segment 36 $ (smooth "[0.2 0 0 0 0 0 0 4 0.1 0 0 0 0 0 0 1]"))
++ up (slow 16 $  smooth ( "[20 0 -12 0 0 0 0 4 0 0 24 0 0 0 0 10]" ) ) 
+# hold (segment 18 $ (choose [0.1,0.2,0.7,2,3,1]) # shrand 10)
++ n (slow 10 $ run 50)
+# cps (slow 20 $ segment 16 $ rangex 0.5 1.2 $ saw)
+-- + begin (fast 1 $ smooth $ segment 16 $ range 0.1 0.9 $saw)
+-- + n 10
+
+hush
+
+do 
+p "unt"
+-- $ resetCycles
+-- $ sometimes ((slow 4).(rev))
+$ degradeBy 0.1
+-- $ loopAt 1
+$ layer [   
+            -- (loopAt 0.1).(# pan (slow (scan 20) $ range 0.25 0.75 $ sine)) 
+            -- , 
+            -- (scramble 12).(loopAt 0.1).(# accelerate ((choose [-0.3,0.3,-0.5,0.6,0.1]) # shrand 30)) 
+          (+ speed (perlin + (slow 12 $sine*1.3))).(loopAt 2).(|* gain (slow 26 $ range 0.5 1 $ sine))
+        ]
+$ sound (segment 8 $ choose ["re9"]) 
+|+ bsin 15 0 0.9 16
++ gain  (fast 1 $ smooth $ segment 16 $ range 0.4 1.2 $saw)
++ release (segment 50 $ (smooth "[0.2 0 0 5 0 0 0 4 0 0 0 0 0 0 0 1]"))
+-- # cut 1
+# hold (choose [0.4,1.8,0.7,2,3,1])
+|* gain 1.1
+# up (degradeBy 0.15 (scale "messiaen5" (run "<10,-14,20,0.3>")))
++ n (slow 10 $ run 10)    
+# cps (slow 40 $ segment 16 $ rangex 1 0.3 $ saw)
+
+hush
+
+
+d1  
+$ sometimes ((chop 10).(degradeBy 0))
+-- $ layer [id, (# accelerate 0.5), (# accelerate (-1)) ]
+-- $ slice 16 "{[~ 2*2] <3 ~ 7 5 15 13>*4 [<~ ~ ~ 4> 3*1]}"
+$ juxBy "<0.4 0.5 0.6 0.7 0.8>" 
+((|+ speed (range 1 1 $ sine)).(+ cps (slow 5 $ segment 16 $ range 0.75 1 $ saw)))
+$ sound "greta"
+# nl
+-- # lpf (segment 16 $ range 1000 6000 $ perlin + 0.3 )
+-- # lbrick 0.7 
+-- (slow 4 $ segment 16 $ range 0 0.2 $ perlin + 0.5 )
+-- # binshift (slow 6 $ segment 16 $ range 0.8 0 $ sine )
+-- # smear 0.7
+-- # comb 0.1
+# attack 0.2
+# hold 2
+# rsin 15 1.13 4 16
+
+hush
+
+d1
+-- $ slow ( slow 20 $ range 1.5 4 $ saw)
+$ degradeBy 0.3
+$ layer [(#size 0.3).(# room 0.7).(0.2 <~)]
+$ juxBy 0.5 ((slow 1.01).(0.1<~))
+$ striateBy 15 (1/10) 
+$ sound (segment 4 $ choose ["kins3","kins2"])
++ begin (segment 16 $ range 0.1 0.9 $saw)
+# attack 0.08
+-- + gain  (fast 1 $ smooth $ segment 16 $ range 0.5 1 $saw)
++ release (segment 12 $ (smooth "[0.2 0.5 0.5 0 0 0.5 0 4 0 0 0 0 0 0 0 1]")) 
+-- |+ up  (slow 4 $  smooth ( "[7 0 12 0 0 0 0 2 0 0 -5 0 0 0 0 1.5]" ) )
+-- |+ speed  (slow 16 $ range (-0.5) 1 $ perlin + 0.3 ) 
+# hold (smooth (choose [0.3,0.2,0.7,2,3,1]) # shrand 10)
+# n "[1,4,13,6,15,7]"
+-- |+ n (slow 220 $ range 60 1 $ saw)
+# cps 0.2
+-- # cps (slow 20 $ segment 16 $ rangex 0.5 0.8 $ saw)
+-- # accelerate ((choose [21,12.5,-26,-30,13]) # shrand 486)
+-- # speed (-1)
+
+hush
+
+
+
+d1
+-- $ slow ( slow 20 $ range 1.5 4 $ saw)
+$ degradeBy 0.2
+$ layer [(#size 0.3).(# room 0.7).(0.2 <~)]
+$ juxBy 0.5 ((slow 1.01).(0.1<~))
+$ striateBy 12 (1/10) 
+$ sound (segment 4 $ choose ["kins3"])
++ begin (segment 16 $ range 0.1 0.9 $saw)
+# attack 0.13
+-- + gain  (fast 1 $ smooth $ segment 16 $ range 0.5 1 $saw)
++ release (segment 12 $ (smooth "[0.2 0.5 0.5 0 0 0.5 0 4 0 0 0 0 0 0 0 1]")) 
+-- |+ up  (slow 4 $  smooth ( "[7 0 12 0 0 0 0 2 0 0 -5 0 0 0 0 1.5]" ) )
+-- |+ speed  (slow 16 $ range (-0.5) 1 $ perlin + 0.3 ) 
+# hold (smooth (choose [0.3,0.2,0.7,2,3,1]) # shrand 10)
+# n "[1,4,13,6,15,7]"
+|+ n (slow 240 $ range 30 1 $ saw)
+# cps 1
+-- # cps (slow 20 $ segment 16 $ rangex 0.5 0.8 $ saw)
+-- # accelerate ((choose [21,12.5,-26,-30,13]) # shrand 486)
+-- # speed (-1)
+
+hush

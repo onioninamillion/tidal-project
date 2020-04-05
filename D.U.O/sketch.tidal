@@ -1,0 +1,36 @@
+
+---develope on time changing
+d1 $ s "byd*20"
+# bpm (slow 5 $ smooth "120 120 160 110 160 40 100 60 100")
+
+d1 
+$ bpm (slow 5 $ smooth "120 120 160 110 160 40 100 60 100")
+>| s "byd*20"
+
+
+
+
+hush
+
+
+d2 $ silence
+
+
+
+d1 
+$ sound "pa1"
++ gain (slow 5 $ dg 0.4 $ segment 16 $ range 0.5 1 $ sine)
+# att 1.7
+# release 3
++ nl
+-- # comb 0.2
+# scram (dg 0.21 $ (100 <~) $ slow 14 $ range 0.4 0.09 $ sine) 
+# fshift  (dg 0.1 (osc64 14 100 304 sine) )
+-- # smear (osc 16 16 0.8 0.7 sine)
+-- |+ speed (slow 12 $ smooth $ "<1 2 -1> 0  0 2")
+* speed (0.8)
+# binshift (osc64 12 0.1 0.25 sine)
+|+ nl
+-- # bone
+-- |+ cps (slow (osc64 5 10 1 sine) $ segment 16 $ range 0.3 0.53 $ saw)
+# orbit 1

@@ -1,0 +1,165 @@
+cps(132/60/4)
+
+bps 1
+
+  hush
+
+  d1
+  $slow 2
+  -- $ every 2 (off 0.25 (density 2.5).(|+|speed sine1).(iter 10).(rev))
+  -- $ every 5 (off 0.25 (density 3).(|*|speed sine1).(iter 2))
+  -- $ every 3 (off 0.15 (density 3).(|+|speed (sine1 * -2)))
+  $ n (irand 3) # sound "[[like2*2 ~]/2 [like3 like3*2]/2 [like4:0 likey]/5 [[like1 ~] like1]/5]" |+| gain "0.9"
+  # cut "1"
+
+hush
+
+    bps 1
+
+    d2
+    -- $ sometimes (within (0.2,0.3) $ jux (stut' 2 0.3 (|+| speed "-1")).(iter 5 "0.2 0.3 0.4 0.5" <~ ))
+    -- $ sometimes (within (0.8,1) $ jux (stut' 3 0.125 (|+| speed "-2")).(slow 4).rev)
+    -- $ degradeBy 0.1
+        -- $ every 2 (iter 50).(rev)
+    -- $ every 4 (fast 1).(rev).(iter 10)
+    -- $ slow "[0.1 [[0.2 0.35] 0.2 0.2]/3 0.1 [0.2 0.1]]"
+    -- $ density "[0.5 [[0.3 0.7] 0.1 0.6]/3 1.1 [0.2 0.1 2]]"
+    -- $ slow 2
+    $ superimpose (foldEvery [2,3,4] (jux (rev)).(iter 10))
+    -- $ (striate' 150 (1/150)
+    $ n (irand 4) # sound "[ like1 [like1 [like2 like2 like2:2]/3 like3 like4], like1*2 [like4 like2]/3]/2"
+    -- |+| speed (whenmod 6 2 ((*0.9) <$>) "[{1 0.5 [0.3*2 0.5]}%4, {1.25 1 2}%2]/12")
+    -- |+| accelerate (slow 12 $ sine - (slow 10 $ sine1 + 1 ))
+    |+| cutoff (slow 3 $ sine*3000 + (slow 10 $ sine*(2000) + 5000 ))
+    -- |+| room "0.5"
+    -- |+| size "0.8"
+    -- |+|speed ((slow 4) $"[2(3,4) -0.5 [0.7 2.3],2(5,8)]%3")
+    # cut "0"
+    # unit "r"
+    # release "0.2"
+
+
+hush
+
+    d1
+      -- $ slow (2/2)
+      $ ifp ((== 0).(flip mod 3))
+      (#coarse "3 1 3")(#room "1 0.3 0.6").(0.23 <~)
+      -- $ every 4 (|+|speed "2 1 -1 ")
+      -- $ every 6 (slow 4).(|+|speed sine1).(rev)
+      -- $ every 5 (fast 2).(|+|speed "-2 1 -1 ")
+      $ every 3(|+|accelerate "1.5 -2.8 2")
+      -- .(stut' 3 (1/100) (# vowel "{a i i o u}%6"))
+      $ ifp ((== 1).(flip mod 4))
+      (#speed "[3 -2 [1 -2 2]]%")(#room "0.6 4").(0.28 <~)
+      .((jux (stut' 2 0.5 (|+| speed "-0.5")).(iter 2 "0.2 0.3 0.4 0.5" ~> )))
+      $interlace
+      (sound $ (preplace (1,4) "[[x(3,14)]/7,[x ~ x] ~,[~ ~ x]/4 ~ ]" "[like1:1 like2 like3 like4]" ))
+      (sound "like1:2 like2:2 bd:3 [808:1 like1:2*2]*2")
+      # cut "0"
+      # gain"1"
+      |+| accelerate (slow 4 $ sine - (slow 10 $ sine1 + 1 ))
+
+
+hush
+
+bps (120/120)
+
+hush
+
+cps (-1)
+
+d1
+  $ superimpose (foldEvery [2,3,4]  (|+| n (choose [2,0])).(|=|speed "1 0.5 0.1"))
+  -- $ superimpose (|+| release (slow 1 (sine1*0.1 +0.2) ))
+  -- $ whenmod 8 7  ((density 4).(brak))
+  -- $ stut' 2 0.2 ((sometimes $ density (choose [1])).(|+|cutoff (slow 2.5 $ sine1*5000 +2000)).(|*|gain "1").(whenmod 7 3 (|=|speed (choose [2]))).(|+| pan "1 0"))
+  -- $ whenmod 6 5  (zoom (0,0.33))
+  -- $ every 3 (sometimes $ within (0,0.33) (|+| begin "0.66"))
+  -- $ every 3 (within (0,0.25)    (|+| n "2"))
+  -- $ superimpose ( every 2 (within (0.25,0.5)  (|+| begin "0.0165").(fast 0.33)))
+  -- $ superimpose (stut' 3 (0.125) ((|*|gain "0.6").(|+| pan (fast 2 "1 0")).(|+| n (fast 3 (choose [1,0,2])))))
+  -- $ every 1 (within (0,0.5)   (|+| n "1 2"))
+  -- $ whenmod 5 2 ((iter 2).(stut' 3 0.2 ((|+| coarse "0.2 0.1 0.4 ") . (|+| begin "0.2 0.3 0.4"))))
+  $ slow 1.5 $ spaceOut (  [1/2,1/3,1/2,1/4] ++ (map (1/) [3,2,4,2])
+  -- $ slow 1.5 $ spaceOut (  [1/2,1/2] ++ (map (1/) [1.5,1.5,2,2])
+  -- ++ (map (1/) [2,1.9..1]) ++ (map (1/) [1.7,1.75..2])
+  )
+  -- $ n (fast 4 $ irand 4) # sound "[like1 like1 [like2] [like3]  like4]/5"
+  $ n ( run $ fast 2 "<3 2 3 4 2 1>") # sound "[like1*3 [like2*2] [like3*2] [like4*2]]/4"
+  -- $ n (iter 8 "[7 [3 4] 2 [5 2] 2 1 3 [2 1]]") # sound "[ like1 [like2 like2] [like3 like3]  like4]/2"
+  -- # cutoff (slow 4 $ sine1 * 3000 +5000)
+  # gain "1.2"
+  # cut "0"
+  # release (slow 1 (sine1*0.2 +0.20) )
+
+
+hush
+
+d2
+  -- $ superimpose (foldEvery [2,3,4]  (|+| n (choose [1,0])).(|=|speed "1"))
+  -- $ stut' 3 0.05 ((sometimes $ density (choose [1])).(|+|cutoff (slow 2.5 $ sine1*5000)).(|*|gain "1").(whenmod 7 3 (|=|speed (choose [2]))).(|+| pan "1 0"))
+  -- $ whenmod 8 7  ((density 4).(brak))
+  -- $ whenmod 6 5  (zoom (0,0.33))
+  -- $ every 3 (sometimes $ within (0,0.33) (|+| begin "0.66"))
+  -- $ every 3 (within (0,0.25)    (|+| n "2"))
+  -- $ superimpose ( every 2 (within (0.25,0.5)  (|+| begin "0.0165").(fast 0.33)))
+  -- $ superimpose (stut' 3 (0.125) ((|*|gain "0.6").(|+| pan (fast 2 "1 0")).(|+| n (fast 3 (choose [1,0,2])))))
+  -- $ every 1 (within (0,0.5)   (|+| n "1 2"))
+  -- $ whenmod 5 2 ((iter 2).(stut' 3 0.2 ((|+| coarse "0.2 0.1 0.4 ") . (|+| begin "0.2 0.3 0.4"))))
+  $ slow 1.5 $ spaceOut (  [1/2,1/2] ++ (map (1/) [2,2,2,2])
+  -- $ slow 1.5 $ spaceOut (  [1/2,1/2] ++ (map (1/) [1.5,1.5,2,2])
+  -- ++ (map (1/) [2,1.9..1]) ++ (map (1/) [1.7,1.75..2])
+  )
+  -- $ n (fast 4 $ irand 4) # sound "[like1 like1 [like2] [like3]  like4]/5"
+  $ n ( run $ fast 8 "<4 5 6 4 5 8>") # sound "[[[bd sn] ~ sn ] bd ~ [bd*4 sn] [bd*3 sn] [bd*2 sn]]/5"
+  -- $ n (iter 8 "[7 [3 4] 2 [5 2] 2 1 3 [2 1]]") # sound "[ like1 [like2 like2] [like3 like3]  like4]/2"
+  -- # cutoff (slow 4 $ sine1 * 3000 +5000)
+   -- release "0.
+  # gain "1.9"
+  # cut "0"
+  -- # release 0.25
+
+
+hush
+
+n=
+
+d2
+  $ slow (5/2)
+  $ jux ((#pan (slow 4 $ sine*0.5 - 1)).(rev).(|+| speed "0.5"))
+  -- $ striate' 1000 (1/20)
+  -- $ superimpose (foldEvery [2,3,4] (|+|accelerate "-1"))
+  -- off 0.25 (# s "cp 808:3").(iter 2)
+  -- $ whenmod 5 4 (stut' 3 0.01 ((|+| coarse "0.2 0.1 -0.6 ") . (|+| begin "0.2 0.1 0.7")))
+  -- $ whenmod 5 2 ((iter 2).(stut' 3 0.2 ((|+| coarse "0.2 0.1 0.4 ") . (|+| begin "0.2 0.3 0.4"))))
+  -- $ every 2 (stut' 3 0.5 ((|+| coarse "0.2 0.1 -0.6 ") . (|+| begin "0.2 0.1 0.7")))
+  $ n ( slow 1 $ (iter 2) "[7 5 [1 1] 1 3 4 [2 1]]") # sound "[bd cp cp [sn ~ ] bd]/5"
+  -- # cutoff (slow 3 $ sine1 * 12000 +5000)
+  -- # resonance (sine1 * 0.4)
+  # room 0
+  # gain "1"
+  # cut "0"
+  # release "0.6"
+
+
+
+d2 silence
+
+  hush
+
+bps 1.5
+
+d2
+   -- $ slow (7/3)
+   $ n (slow 4 $ run 12) # sound ( preplace (1,3) "[[[[x ~] x]] x [[[10 ~] x] x] [x ~]]]" "[[like1 ~] like2 [[~ like3] like4]]" )
+   # cut"0"
+   #sustain "0.7 0.4 0.5 0.6"
+
+   d3
+      -- $ slow 4
+      $ n (irand 3) # sound ( preplace (1,3) "[[x [x ~]] [x ~ x [x*2]] [x [x ~]]]*10" "[bd:6 sn cp*3 hh]" )
+      # cut"0"
+      # gain "1.1"
+
+-- d1 $ sound "likey:2"

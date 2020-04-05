@@ -1,0 +1,22 @@
+
+do
+    let world p = slow "<4 4 3 2>" $ struct (cat ["t(3,5,2)","t(7,16,14)","t(11,24,14)","t(9,16)","t(13,24,5)", "t(4,9)"]) $ p
+    d1 
+    -- $ swingBy 0.25 (0.44)
+        $ layer [plyWith (round <$> (range 10 40 $ rand)) (|* gain 0.92).(|* speed (range 1.01 1.05 $ rand)).(|+ begin 0.015)
+        ,((range 0.005 2.5 $ slow 20 $ rand) ~>)
+        ]
+        $ sew (slow 4 $ bizy) (world $ s "w01:3") (s "kins3" # gain 0.9 # lpf (osc64 12 2500 7400 sine))
+        # speed (choose [1,1,-1,1,0.74,0.5,-0.5])
+        # up (
+            arp (select (cF 0.5 "0") ["up","down"]) 
+            (select (cF 0.5 "1") ["a'm6by9'4","e'sus2'2","f'sus4'6","[d'sus2'5 a'six'2]"])
+            )
+        -- # cps (segment 64 $ range 0.5 0.9 $ slow 24 $ saw)
+        -- # delaytime (choose [0.51,0.01625,0.02,0.21])
+        -- # delayfeedback 0.4
+        -- # delay 0.5
+
+
+
+hush

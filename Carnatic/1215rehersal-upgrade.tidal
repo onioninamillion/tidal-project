@@ -1,0 +1,441 @@
+jathis :: Rational -> Pattern a -> Pattern a -> [Int] -> Pattern a
+jathis perCycle a b xs = sew boolStep a b
+  where boolStep :: Pattern Bool
+        boolStep = _slow ((toRational $ sum xs) / perCycle) $ listToPat $ list xs
+        list :: [Int] -> [Bool]
+        list [] = []
+        list (x:xs) = (True:(replicate (x-1) False)) ++ list xs
+
+hush
+
+do
+    let 
+      gatis = (cF 1 "0")
+      gtonum = select (gatis) [4,3,5,6,7]
+      prat = slow (gtonum/(select (cF (1/7) "3") [1,2,3,4,5,6,7])) --Pratiloma
+      ta = tala gatis ((6*(cF 1 "1")) + (slow 10 $ irand 0)) (irand 60) --重要
+      re = repeatCycles 
+      rep = (selectF (cF 3 "4") [re 1,re 2,re 3,re 4] )
+      jathig = (jathis 5 1   0.8  [7,7,5,6,4,4,5,1,3,3])
+      jathip = (jathis 5 0.8 0.2  [7,7,5,6,4,4,5,1,3,3])
+      jathia = (jathis 5 4 0      [7,7,5,6,4,4,5,1,3,3])
+      jathin = (jathis 5 (-4) (slow 20 $ range 3 1 $ sine) [4,5,1,3,3,7,7,5,6,4])   
+    d1
+      $ degradeBy (cF 0 "2") 
+      $ stack [ --------beats
+              degradeBy (cF 1 "8") $
+            --   linger 0.3 $
+              rep $
+              prat $
+              ((240 + (irand 0)) <~)
+              $ ta
+              $ sometimes (within (0.2,0.4) (plyWith "<3 4 4 2 2>" (|+ n 0)))--Anuloma
+              $ sound (select (cF 0.1 "7") ["jungle*7","jazz*7","tabla*7"]) 
+              # speed 1.2
+              # pan (jathip)
+              # orbit 0
+              # gain ((jathig) * 1)
+              -- |+ n (choose [7,5,4]) 
+              -- |+ n (choose [0,1,3])
+              |+ n (choose [2,5,5]) 
+            --  |+ n (choose [6,3,7,4,0]) ----重要
+              ,
+              -------------qin
+              re 1 $
+              degradeBy (cF 0.5 "9") $
+              plyWith 3 ((+ lpf 200).(+ n 1)) $
+              s "qin01*3" # nr # pan ((0.2 <~ ) $ jathip) # cut 0 * speed (-1) 
+              # (gain $ jathig) 
+              |* gain 1
+              # orbit 1
+              ,---------arp bass
+              re 1 $
+              degradeBy (cF 1 "10") $
+              prat $
+              ta $
+              s "bass:1" + speed (jathin)  # gain 0.7
+              # orbit 2
+              ,----------clap
+              g $
+              degradeBy (cF 0 "12") $
+              prat $
+              re 1 $
+              within (0.25,0.75) (plyWith (iter 5 "3 4 [4 1] 2 2") (|+ n "1 10 14 <16 10 15>")) $
+              (320 <~)  
+              $ ta
+              $ s "cp:1*7" 
+              |+ gain (jathis 7 0.9 0.6 [3,2,5,2,3,3,2,4,5])
+              # up (5)
+              # orbit 3
+              ,----------neon
+              g$
+              degradeBy (cF 0 "12") $
+              prat $
+              re 1 $
+              within (0.25,0.75) (plyWith (iter 5 "3 4 [4 3] 2 2") (+ begin 0.1)) $
+              (320 <~)  
+              $ ta
+              $ s "kins3:1*7" 
+              |+ gain (jathis 5 1 0.8 [7,7,5,6,4,4,5,1,3,3])
+              # up (2)
+              # orbit 3
+              |+ n (jathis 5 3 1 [7,7,5,6,4,4,5,1,3,3])
+              + n (slow 11 $ scan 20)
+              # speed "1 1 1 1 1 -1 -1"
+              ]
+              # cps 1
+    d2 
+      $ degradeBy (cF 0 "11")
+      $ slow (7/gtonum)
+      $ ta 
+      $ s "red1" 
+      # n "<7 12 0>" - 4 
+      # up ("<7 12 0>" - 5)
+      # nl   
+      # gain 0.8
+      # accelerate (jathia)
+      # orbit 4
+
+
+hush
+
+do
+    let world p = slow "<4 4 3 2>" $ struct (cat ["t(3,5,2)","t(7,16,14)","t(11,24,14)","t(9,16)","t(13,24,5)", "t(4,9)"]) $ p
+    d5
+    -- $ swingBy 0.25 (0.44)
+        $ degradeBy 0.4
+        $ layer [plyWith (round <$> (range 10 40 $ rand)) (|* gain 0.92).(|* speed (range 1.01 1.05 $ rand)).(|+ begin 0.015)
+        ,((range 0.005 2.5 $ slow 20 $ rand) ~>)
+        ]
+        $ sew (slow 4 $ bizy) (world $ s "w01:3") (s "kins1*0" # gain 0.7 # lpf (osc64 12 2500 7400 sine))
+        # speed (choose [1,1,-1,1,0.74,0.5,-0.5])
+        # up (
+            arp (select (cF 0.5 "0") ["up"]) 
+            (select (cF 0.5 "1") ["f'sus4'6","[d'sus2'5 a'six'2]"])
+            )
+        -- # cps (segment 64 $ range 0.5 0.9 $ slow 24 $ saw)
+        -- # delaytime (choose [0.51,0.01625,0.02,0.21])
+        -- # delayfeedback 0.4
+        -- # delay 0.5
+
+d5 silence
+
+d6
+$ degradeBy 0.3
+$ whenmod 7 5 (chunk 3 (fast 2)) 
+$ khanda 4 (slow 4 $ "13 45 12 23")
+$ sound "tabla*5" # speed 0.913
+# (gain $ jathis 5 0.9 0.5 [7,4,5,3,3,1,5,2,3,3]) 
+# n (choose [7,5,6]) 
+# cps 1
+
+
+d6
+$ degradeBy 0.3
+$ whenmod 7 5 (chunk 3 (fast 2)) 
+$ khanda 4 (slow 4 $ "13 45 12 23")
+$ sound "tabla*5" # speed 0.79
+# (gain $ jathis 5 0.9 0.5 [7,4,5,3,3,1,5,2,3,3]) 
+# n (choose [7,5,6]) 
+# cps 1
+
+d6 silence
+
+hush
+
+
+do
+    let jathi =  (jathis 5 1 0.8 [7,7,5,6,4,4,5,1,3,3])
+        jathip = (jathis 5 0.8 0.2  [7,7,5,6,4,4,5,1,3,3])
+        re a = repeatCycles a
+    d7
+      $ degradeBy 0.2
+      $ selectF ("<1 2 4 4 4 2 1 2 1 3 3>") [re 4,re 3 ,re 2,re 1]
+      $ tala (1/7) 4 (irand 45)
+      $ stack [ 
+              (240 <~)
+              $ within (0.2,1) (plyWith "<3 4 4>" (|+ nl))
+              $ sound "tabla*4" # speed 0.913 # pan (jathip) 
+              # n (choose [7,5,6,12]) 
+              # orbit 6
+            --   # n (choose [9,8])
+            ,
+            --  within (0,0.25) (plyWith "<13 4 4>" (|+ speed 1)) $
+              s "qin01*4" # nr # pan ((0.2 <~ )$jathip) # cut 1 # speed 0.94 # orbit 7
+            --   # accelerate (rand)
+              ]
+      # (gain $ jathi) 
+      # cps 1
+      # cut 1
+      
+
+d7 silence 
+      
+hush
+
+
+d3 
+-- $ (# cps (("<1.24 0.9 0.85 1.2 0.8>") * (rise3 5 0.5 1.2))) 
+$ degradeBy (rise3 4 0.9 (slow 12 $ range 0.1 0.2 $ sine))
+$ stack [
+        jux (0.001~>) $
+        -- slow 2 $ 
+        plyWith "<15 16 17 19>" ((# gain 0.94).(# begin (slow 14 $ range 0.01 0.15 $ sine)))
+        $ slow 4 $ striate' "<16 14 12 10 11 13>" (1/20) 
+        -- $ struct bizy 
+        $
+        s "[kins3:20]"
+        -- # nl
+]
+-- |+ nl
+-- + up "[12]"
+-- # bpf "[420]"
+-- |+ n (slow 3 $ (choose [10,19,25]))
+-- # cps 1
+-- # room 0.013
+-- # size 0.013
+-- # atrl 0.14 0.45
+-- |+ nr
+# speed "1 1 1 1 1 -1 -1"
+-- |-| gain 0.9
+|+ up (arp "<[updown ~] [up pinkyup]/2 disconverge/1 converge>" "<c'm9'7 f'7sus2'9 a'm6'6>")
+
+
+hush
+
+d1
+$ every 4 (rev)
+$ every 3 (palindrome)
+-- $ every 11 (|+ speed (rise1 7 1  ))
+$ every 7 (+ speed (rise1 20 1 1.9 ))
+-- $ fast 2
+$ plyWith "<14 10 26 5>" ((|* gain 0.91 ).(# pan "<0.1 0.9>"))
+$ s "[red1*1,kins2:4*0]"
+# nl
+-- # up (choose [0,12,12])
+# cps "<2.5 0.8 1.75 1.6 1 1.05 1.1 1.2 0.9 0.7>" |- cps 0.5
+-- *| cps (osc 12 0.5 1 saw) 
+# attack 0.15
+# release 2.5
+-- # octer 0.3
+# speed "[1.2]"
+-- # comb ((slow 4.3 $ range 0.67 0.72 $ sine)*(slow 25.2 $ range 1 0.02 $ sine))
+# lpf (slow 12.2 $ range 200 9000 $ sine)
+
+hush
+
+
+
+do
+  let world p = slow "<4 4 3 2>" $ struct (cat ["t(3,5,2)","t(7,16,14)","t(11,24,14)","t(9,16)","t(13,24,5)", "t(4,9)"]) $ p
+  d3
+      -- $ swingBy 0.25 (0.44)
+      -- $ layer [plyWith (round <$> (range 10 30 $ rand)) (|* gain 0.91).(|* speed (range 1 2.05 $ rand)).(|+ begin 0.015)
+      -- ,((range 0.005 2.5 $ slow 20 $ rand) ~>)
+      -- ]
+      $ sew (slow 4 $ bizy) (world $ s "qin01" # gain 0.8) (g $ s "cym*4" # gain 0.8 # lpf (osc64 12 17000 400 sine))
+      # speed (choose [1,1,-1,1,0.74,0.5,-0.5])
+      * speed (segment 4 $ range (-2) 2 $ (cF 0.5 "2"))
+      # up (
+          arp (select (cF 0.5 "0") ["up","down"]) 
+          (select (cF 0.5 "1") ["a'm6by9'4","e'sus2'2","f'sus4'6","[d'sus2'5 a'six'2]"])
+          )
+      # cps (segment 32 $ range 0.75 1 $ slow 24 $ saw)
+      # delaytime (segment 1 $ choose [0.51,0.625,0.12,0.21])
+      # delayfeedback 0.4
+      # delay (segment 1 $ range 0 1 $ (cF 0.5 "4"))
+      # n (run (segment 16 $ range 1 16 $ cF 0 "3" ))
+      # orbit 1
+
+
+
+do 
+  let srand = speed (slow 10 $ range 0 (rise1 20 1 0.3) $ sine)
+      sverb = room (range 0 (rise1 4 0 1 ) $ saw)
+  d1
+    $ (# cps (slow (osc64 12 12 1 saw) $ rangex 4.5 0.4 $ saw )) 
+    $ (|+ speed (degradeBy (rise1 10.1 0.7 0.04) (rise1 (choose [1,9]) 10 0.5) )) 
+    $ stack [
+      off (range 0 1.4 $ slow 4 $ sine) ((# nr).(10 <~)) $
+      struct "t*2" $
+      s "[qin01]"
+      # n (rise1 20.5 1 (irand 1000)) 
+      # sverb
+      # size 0.7
+      # srand
+      -- # gain (rise1 1 1 )
+      ]
+      |* speed (choose [1,-1,-1])
+      # lpf (osc64 12.2 14000 4000 sine)
+      # octersub 1
+      # cut 0
+      # orbit 1
+
+      hush
+
+
+d1 
+$ plyWith 2 (0.1 <~)
+$ tala 5 6 10 $ s "bd"
+
+hush
+------syncopation
+
+do
+  let 
+    gatis = (cF 0.8 "0")
+    gtonum = select (gatis) [4,3,5,6,7]
+    prat = slow (gtonum/(select (cF (1/7) "3") [1,2,3,4,5,6,7])) --Pratiloma
+    ta = tala gatis ((6*(cF 1 "1"))+ (slow 10 $ irand 0)) 0 --重要
+    re = repeatCycles 
+    rep = (selectF (cF 3 "4") [re 1,re 2,re 3,re 4] )
+    jathig = (jathis 5 1   0.7  [7,7,5,6,4,4,5,1,3,3])
+    jathip = (jathis 5 0.8 0.2  [7,7,5,6,4,4,5,1,3,3])
+    jathia = (jathis 5 4 0      [7,7,5,6,4,4,5,1,3,3])
+    jathin = (jathis 5 (-4) (slow 20 $ range 3 1 $ sine) [4,5,1,3,3,7,7,5,6,4])   
+  d1
+    $ degradeBy (cF 0 "2") 
+    $ stack [ --------beats
+            superimpose ((degradeBy 0.1 ).(plyWith 20 ((slow 100 $ range 0.25 2 $ sine) <~).(|+ n (slow 12 $ range 1 20 $ sine)))) $
+            -- superimpose ((degradeBy 0.1 ).(plyWith 12 ("0.25 2" <~).(|+ n (slow 12 $ range 1 20 $ sine)))) $
+            degradeBy (cF 0 "8") $
+            re 1 $
+            --   linger 0.3 $
+            prat $
+            ((240 + (irand 0)) <~)
+            $ ta
+            $ sound (select (cF 0.6 "7") ["jungle*7","jazz*7","tabla*7"]) 
+            # speed 1.2
+            # pan (jathip)
+            # orbit 0
+            # gain ((jathig) * 1)
+            -- |+ n (choose [7,5,4]) 
+            |+ n (choose [0,1,3])
+            -- |+ n (choose [2,5,5]) 
+          --  |+ n (choose [6,3,7,4,0]) ----重要
+    ]
+
+    hush
+
+
+
+------same gatis / 5 aganst 7 jatis
+
+d2 $ s "cp" 
+
+d2 silence
+
+:t 
+
+do
+  let 
+    gatis = (cF 1 "0")
+    gtonum = select (gatis) [4,3,5,6,7]
+    prat = slow (gtonum / (select (cF (7/7) "3") [1,2,3,4,5,6,7])) --Pratiloma
+    ta = tala gatis ((6*(slow 24 $ saw))) (irand 20) --重要
+    re = repeatCycles 
+    rep = (selectF (cF 3 "4") [re 1,re 2,re 3,re 4] )
+    jathig = (jathis 7 1 0.8 [3])
+    jathip = (jathis 7 0.7 0.3  [7,7,5,6,4,4,5,1,3,3])
+    jathin = (jathis 7 (choose [1,0]) 2 [5])
+    -- jathin = (jathis 5 (-4) (slow 20 $ range 3 1 $ sine) [4,5,1,3,3,7,7,5,6,4])   
+  d1
+    $ degradeBy (cF 0.2 "2") 
+    $ stack [ 
+            --------beats
+            -- superimpose ((degradeBy 0.1 ).(plyWith 2 ((slow 100 $ range 0.125 2 $ sine) <~))) $
+            whenmod 7 4 (within (0.5,1) (plyWith 10 (* speed (-0.3)))) $
+            re 1
+            -- $ prat 
+            -- $ ta
+            $ s "pa1:3*7"
+            # gain (jathig * 1)
+            -- # speed (jathis)
+            # pan (jathip)
+            # n (jathin)
+            # orbit 0
+            # lpf (range 2000 20000 $ rand)
+            # atrl 0.12 (slow 39 $ range 0.1 0.8 $ saw)
+            # begin (slow 39 $ range 0.1 0.8 $ saw)
+    ]
+
+hush
+
+-----try samples
+
+do
+  let 
+    gatis = (cF 1 "0")
+    gtonum = select (gatis) [4,3,5,6,7]
+    prat = slow (gtonum / (select (cF (7/7) "3") [1,2,3,4,5,6,7])) --Pratiloma
+    ta = tala gatis ((6*(1))) (slow 39 $ run 50 ) --重要
+    re = repeatCycles 
+    rep = (selectF (cF 3 "4") [re 1,re 2,re 3,re 4] )
+    jathig = (jathis 7 1 0.8 [3,5,4,2])
+    jathip = (jathis 7 0.7 0.3  [7,7,5,6,4,4,5,1,3,3])
+    jathin = (jathis 7 (slow 12 $ range 0 20 $ sine) (slow 12 $ run 13) [5,1,3,4,4,6])
+    jathisp = (jathis 7 (slow 5.6 $ sine) 4 [7,7,5,6,4,4,5,1,3,3])
+    -- jathin = (jathis 5 (-4) (slow 20 $ range 3 1 $ sine) [4,5,1,3,3,7,7,5,6,4])   
+  d2
+    $ degradeBy (cF 0.2 "2") 
+    $ stack [ 
+            --------beats
+            -- superimpose ((degradeBy 0.1 ).(plyWith 3 ((slow 100 $ range 0.125 2 $ sine) <~))) $
+            (plyWith "<5 1 3 4 7 12 14>" (((slow 100 $ range 0.05 2 $ sine) <~).(* begin (0.04)).(* speed (-1)))) $
+            re 1
+            $ prat 
+            $ ta
+            $ s (select (smooth $ jathisp) ["shstr*7","blips06*7"])
+            # gain (jathig * 1)
+            # pan (jathip)
+            # n (jathin)
+            -- # up (range 0 7 $ rand)
+            # orbit 0
+            # lpf (range 2000 20000 $ slow 12 $ sine)
+            -- # atrl 0.12 (slow 39 $ range 0.25 1.8 $ saw)
+            -- # begin (slow 39 $ range 0.1 0.2 $ saw)
+    ] 
+    -- # smear (range 0.4 1 $ rand)
+    # comb (range 0 1 $ slow 12 $ sine)
+    # enhance ((range 0.32 0.41 $ slow 20 $ sine)*jathip*"<2.4 1.2 1.1>")
+
+    hush
+
+do
+  let 
+    gatis = (cF 1 "0")
+    gtonum = select (gatis) [4,3,5,6,7]
+    prat a = slow (gtonum / (select (cF (a/7) "3") [1,2,3,4,5,6,7])) --Pratiloma
+    ta = tala gatis ((6*(1))) (slow 39 $ run 50 ) --重要
+    re = repeatCycles 
+    rep = (selectF (cF 3 "4") [re 1,re 2,re 3,re 4] )
+    jg = (jathis 7 1 0.8     [7,7,5,6,4,4,5,1,3,3])
+    js = (jathis 7 0.47 0.6  [7,7,5,6,4,4,5,1,3,3])
+    jn = (jathis 7 (slow 12 $ range 0 20 $ sine) (slow 12 $ run 13) [5,1,3,4,4,6])
+    jde = (jathis 7 (range (1.12) (1.01) $ slow 35 $ sine) (0.98) [7,7,5,6,4,4,5,1,3,3])
+  d4 
+    $ degradeBy 0.3
+    -- $ re 2
+    $ every 4 (plyWith "<4 2>" (((1/7) <~).(|* sustain "0.4 0.5")))
+    $ every 3 (plyWith "<2 1 2>" (((4/7) <~).(|* sustain 0.13)))
+    $ prat 7
+    -- $ ((slow (7) $ saw) <~) 
+    $ tala 7 4 (69)
+    $ s "superwavemechanics*7"
+    # sustain 0.8
+    # gain (((slow (7.5) $ saw) <~) (jg))
+    |+ n "<f'maj9'3>"
+    -- - n 20 
+    -- |- n "<3 3 3 15 15 10 10>"
+    -- # voice (slow 12 $ range 0.4 3.9 $ sine)
+    -- # detune (jde)
+    # bpm 10
+    # resonance 0.4
+    -- # resonance (range 0.84 0.8 $ slow 300 $ sine)
+
+hush
+
+d2 $ s"cp" # gain 0.6
+
+
+

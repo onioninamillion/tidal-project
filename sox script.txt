@@ -1,0 +1,21 @@
+#1
+sox in.wav out.wav trim 0 sec : newfile : restart
+
+#2
+sox in.wav out.wav silence 1 0.5 1% 1 2.0 1% : newfile : restart
+
+sox in.wav out.wav silence 1 0.5 0.5% 1 0.5 0.5% : newfile : restart
+
+Using SoX’s newfile pseudo-effect allows us to split an audio file based on periods of silence,
+ and then calling restart starts the effects chain over from the beginning. 
+In this example, SoX will split audio when it detects 5 or more seconds of silence. 
+You’ll end up with output files named out001.wav, out002.wav, and so on.
+
+
+sox -r 22050 -c 2 -d (name.wav) silence 1 1.0(有聲音_秒開始錄) 1.0% -1 0.5(無聲_秒停止錄) 1.0% : newfile : restart 
+
+
+自動刪除無聲的地方
+儲存成個別檔案
+sox in.wav out.wav silence 1 0.1 1.0%
+1 0.5 1.0%  : newfile : restart

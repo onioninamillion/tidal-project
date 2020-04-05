@@ -1,0 +1,143 @@
+
+let scale = getScale (scaleTable ++ [
+                                     ("hamsadhvani", [0,2,4,7,11])
+                                    ])
+
+do
+    let world p = slow "<2 2 3 4 1 1 1>" $ struct 
+                            (randcat [
+                            -- "t(3,5,2)",
+                        "t(7,16,14)",
+                        -- "t(11,24,14)",
+                        "t(9,16)",
+                        -- "t(13,24,5)",
+                        "t(4,9)"
+                            ]) $ p  
+    d1
+        -- $ brak
+        $ splice 4 "1 2 1 0"
+        $ every 3 (+ n "<3>")
+        -- $ every 2 (within (0,1) ((rev).(# s "superpwm [[super808 superpwm]superclap]")))
+        $ stack [
+        dg 0.2 $  
+        -- spfx1 $
+        sew (slow 2 $ bizy) (world $ s "asynth") (tala 5 "12 39 41 19" 5 $ s "[asynth]")
+        # (slow 3.6 $ randcat [ n "c4'minor7" , n "bf4'7sus4", n "af4'major7" ,n "ef4'nine", n "f4'minor7",n "ef4'six" ,n "[0,4,6,11]"] )
+        # gain "[1 1 1 <1.1 0.8> 1]"
+        -- # sustain "0.04 1.3"
+        ,
+        -- g $
+        (0.125 <~) $
+        every 4 (fast 2) $
+        sew (slow 2 $ bizy) (world $ s "superfork") (tala 7 6 "12 39 41 19" $ s "[superfork]")
+        #  n (scale "minPent" "<0 -12 9> .. <2 7 0 10 -13>")
+        # gain 1.2
+        # size 0.7
+        # room 0.4
+        ]        
+        # cps 1
+        -- # cps "<1 0.8 0.5 1.2>"
+
+hush
+
+
+
+c f g c 
+c bb7 f g c
+
+
+let slowrun a = (slow a $ run a)
+
+d1 
+$ fast 1.4
+$ layer [id , (struct "t").(|- n "<12>").(0.125 ~>)]
+$ tala 7 5 (slow 10 $ run 10) 
+$ s "[asynth]"
+# n (arp "up" "<c'maj'7  d'major'8 g'9sus4'7 a'sus4'7 bf'dom7'6 f'maj'7 g'maj'7 c'maj'7>")
+
+hush
+
+d1 
+$ s "superpiano"
+# n "bf'dom7"
+
+
+hush
+
+d1 
+$ s "superpiano"
+# n "ef'minor7"
+
+------------------
+
+d1 
+$ s "superpiano"
+# n "bf4'7sus4"
+
+d1
+$ s "superpiano"
+# n "df4'7sus4"
+
+hush
+
+-----------------
+d1 
+$ s "superpiano"
+# n "af4'major7"
+
+d1 
+$ s "superpiano"
+# n "cf4'major7"
+
+--------------------
+
+d1 
+$ s "superpiano"
+# n "ef4'nine"
+
+
+d1 
+$ s "superpiano"
+# n "gf4'nine"
+
+---------------
+d1 
+$ s "superpiano"
+# n "f'minor7"
+
+d1 
+$ s "superpiano"
+# n "af'minor7"
+
+----------------
+d1 
+$ s "superpiano"
+# n "ef4'six"
+
+
+d1 
+$ s "superpiano"
+# n "gf4'six"
+
+----------------
+d1 
+$ s "superpiano"
+# n "df'sevenFlat5"
+----- sevenFlat5 : 1 3 5b 7b
+
+d1 
+$ s "superpiano"
+# n "c'm7flat5"
+
+-----m7flat5: c eb gb bb 
+
+
+d1 
+$ s "superpiano"
+# n "[0,4,6,11]"
+
+---------------
+major7flat5
+[0,4,6,11]
+
+hush

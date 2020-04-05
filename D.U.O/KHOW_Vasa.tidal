@@ -1,0 +1,57 @@
+
+
+d1 silence
+
+do
+    let 
+      gatis = (cF 0.9 "0")
+      gtonum = select (gatis) [4,3,5,6,7]
+      prat = slow (gtonum/(select (cF (1/7) "3") [1,2,3,4,5,6,7])) --Pratiloma
+      ta = tala gatis ((6*(cF 1 "1"))+ (slow 10 $ irand 0)) 2 --重要
+      re = repeatCycles 
+      rep = (selectF (cF 3 "4") [re 1,re 2,re 3,re 4] )
+      jathig = (jathis 5 1   0.7  [7,7,5,6,4,4,5,1,3,3])
+      jathip = (jathis 5 0.8 0.2  [7,7,5,6,4,4,5,1,3,3])
+      jathia = (jathis 5 4 0      [7,7,5,6,4,4,5,1,3,3])
+      jathin = (jathis 5 (-4) (slow 20 $ range 3 1 $ sine) [4,5,1,3,3,7,7,5,6,4])   
+    d1
+      $ degradeBy (cF 0 "2") 
+      $ stack [ --------beats
+              -- superimpose ((degradeBy 0).(plyWith 24 ((slow 100 $ range 0.25 2 $ sine) <~).(|* release 0.91))) $
+              -- superimpose ((degradeBy 0.1 ).(plyWith 12 ("0.25 2" <~).(|+ n (slow 12 $ range 1 20 $ sine)))) $
+              degradeBy (cF 0.4 "8") $
+              re 1 $
+              --   linger 0.3 $
+              prat $ ((240 + (irand 0)) <~) $
+               tala 7 5 (irand 130)
+              $ sound (select (cF 1 "7") ["ne1*7","shstr*7","blips06*7","[mu]"]) 
+              # speed (-0.4)
+            --   # comb (jathip)
+              # orbit 0
+            --   # gain ((jathig) * 1)
+              # nl
+              -- # attack 0.2
+            --   # hold 0.2
+            --   # release (slow 2000 $ range 0.35 4 $ sine)
+              -- |+ n (choose [7,5,4]) 
+            --   |+ n ((choose [0,1,6]) + (range 0 20 $ cF 4 "7")) 
+              -- |+ n (choose [2,5,5]) 
+            --  |+ n (choose [6,3,7,4,0]) ----重要
+      ] 
+      # cut 1
+    --   |+ bpm (segment 8 $ slow 16 $ range 180 60 $ sine)
+    --   # release 4.4
+
+
+      hush
+
+
+d4
+$ rev
+$ struct bizy
+$ s "mu"
+# begin (slow 2 $ range 0 0.9 $ saw)
+# bpm 100
+# nl
+# sp 2
+-- # atrl 0.2 0.45

@@ -1,0 +1,26 @@
+--gugu reverb (rec)
+d1
+$ every 4 (rev)
+$ every 3 (palindrome)
+-- $ every 11 (|+ speed (rise1 7 1  ))
+$ every 7 (+ speed (rise1 20 1 1.9 ))
+-- $ fast 2
+$ plyWith "<24 30 26 55>" (
+                          (|* gain 0.95 ).
+                          (* pan (-1)).
+                          (|+ size 0.1)
+                        --   .(|* speed (choose [1.02,0.98]))
+                          )
+$ s "[tudi]"
+# cps( "<1.9 0.8 1.7 1.57 1 1.05 1.1 1.2 0.5 0.7>" * (range 0.4 1.5 $ slow 15 $ sine))
+# attack 0.125
+# release 3.3
+# octer 0.4
+# speed ((range 0.8 1.2 $ rand) * (choose [1,-1,1,1]))
+-- # comb ((slow 5 $ range 0.27 0.72 $ sine)*(slow 24 $ range 1 0.02 $ sine))
+# lpf (slow 12.2 $ range 200 9000 $ sine)
+# room (choose [0.2,0.34,0.5,1,0])
+# nr
+
+
+hush

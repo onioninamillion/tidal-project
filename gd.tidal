@@ -1,0 +1,97 @@
+
+d2
+  $ every 2 (sometimes $ juxBy 0.2 ((+ n "[1,3,5]").(slow 3)))
+  $ every 3 (sometimes $ juxBy 0.8 ((+ n "2").(|+| shape 0.4)))
+  $ sometimes (jux ((+| speed (slow 6 (rand))).(stut 3 0.2 0.9).(# gain (range 1 0.5 (slow 4 $ saw)))))
+  $ every 5 ((rev))
+  -- $ every 6 (loopAt (fast 2 (choose[1.25,1.5..4.75])))
+  ( sound "[gd]"
+  -- + speed (fast (choose [15.0009,15.0008..15.0000]) $ segment 16 $ range 0.37 1.02 $ saw)
+  )
+  # begin  (slow 20 $ segment 16  (range 0.02 0.98 $rand))
+  # attack (slow 10 $ segment 16  (range 0.2 0 $sine))
+  # release(slow 10 $ segment 16  (range 0.1 3 $sine))
+  + n (degradeBy 0 "[1 .. 50]/50")
+  # lpf (slow 6 (range 1000 7000 (sine)))
+  # lpq "0.1"
+  -- # delayfb (discretise (1/12) (slow 10 (range 0.3 0.5 $sine)))
+  -- # delayt (discretise (1/15) (slow 12 (range 0.02 0.05 $sine)))
+  -- # delay (discretise (1/12) (slow 10 (range 0.2 0.7 $sine)))
+  # cut 0
+  # size (slow 5 (choose[0.3,0.5,0.2,0.7]))
+  # room "0.4"
+  # speed (slow (choose[0.5,0.75..4]) "<1.1,1.12..1.3>")
+  # nudge (slow 5 (range 0.1 1.5 (slow 2 $ saw)))
+
+hush
+
+   d2
+   -- $ jux ((slow (choose [2,4..6])).(rev))
+   -- $ sometimes (degrade)
+   $ stack
+   [
+   -- -- spaceOut ( (map (1/) [1,1.5..10] ) ++ (map (1/) [8,7.75..1])) $
+   stut' 2 0.25
+         (
+         -- (sometimes $ density (choose [0.2])).
+         (|+|speed (fast 5 (linger 0.25 $ degradeBy 0.2 "[-0.5,-0.4..2]"))).
+         -- (sometimes $ (|=|accelerate (slow 4 (choose [-2,-1.8..1])))).
+         -- (sometimes $ jux (loopAt (choose [10,13,2,1]))).
+         (|*| gain (slow 4 (rangex 0.7 1 $ sine))).
+         (|+| pan "1 0")
+         )
+   (sound "[gd*20,tt*10]"
+   -- |-| speed (fast 1.5 $ range 0.95 1.1 $ saw)
+         # nudge (slow 2 $ iter 22 "1,2..22")
+         )
+   ]
+   # n (slow 25 $ run 50)
+   # pan (slow 30 (range 0.3 0.7 $ sine))
+   # begin (slow 10 (range 0.1 0.95 $ sine))
+   # release (slow 15 (range 0.13 5 $ sine))
+   # attack (slow 18 (range 0.4 0.5 $ sine))
+   # cut 0
+   -- |-| speed "2.5"
+   -- |+| lpf (slow 5(rangex 500 6000 $ saw))
+   -- |+| hpf (slow 18(rangex 400 4000 $ sine))
+
+   d1
+   $ jux (slow 3)
+   -- $ striate 32
+   -- $ spaceOut ( (map (1/) [1,1.5..10] ) ++ (map (1/) [8,7.75..1]))
+   ( sound "gd:9*10"
+   # speed (fast 20.1 $ range 1 2 $saw)
+   )
+   # begin (slow 40 (range 0.1 0.9 $sine))
+   -- # pan (fast 40 $ rand)
+   # release (fast 40 (range 0.4 3 $ sine))
+   # cut 0
+   # speed 1.1
+
+
+hush
+
+
+d1
+   $ slow 10
+   -- $ loopAt "1"
+   -- $ degradeBy 0.2
+   -- $ off 0.125 (striate (slow 6 "[[12 2] 4 [6 4]]")).(|*| gain "1.25")
+   -- $ off 0.25 ((|=| n "[2,3..41]/40").(|=|speed "1"))
+   -- $ off 0.25 ((|=| n "[3,4..42]/40").(swing (slow 3 "0.3 0.2 0.1 0.2 0.2")))
+   -- $ linger (slow 4 "[0.125,0.25..1]")
+   $ sound "[gd*20]"
+   # begin (slow 16 (range 0.01 0.99 $saw))
+   -- # release (slow 10 (range 0.2 1 $ sine))
+   # cut 1
+  -- |+ n (slow 40 (run 40))
+   -- # nudge (range 3 1 (slow 10 (sine)))
+
+
+ d1 -- Through an intermediary
+ $ slow (choose $ [0.2,0.3..2] ++ [0.04,0.039..0.003])
+ $ s "gd*3?"
+ # gain (fast 2 $ range 0.5 2 $ rand)
+ # hpf (slow 3 $ range 20 20000 $ saw)
+ # pan (slow 9 $ rand)
+ # cut 1

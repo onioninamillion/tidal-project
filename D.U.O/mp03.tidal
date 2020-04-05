@@ -1,0 +1,15 @@
+--start from clock sound
+
+d1
+-- $ bpm (slow 4 $ smooth $ scramble 1 "120 120 16 110 160 40 100 60 100")
+>| s "mp03*1"
+|+  n (("<[2 .. <10 5>][<4 10 8 9 5> .. <0 5 8>]*[2]>" ) * (run 50) )
+# atrl 0.51 0.5
+-- |+ delaytime (dg 0.6 ("<[20 .. <10 5>][<4 10 30 9 5> .. <0 2 8>]*[2]>" ) / 500 )
+-- # delayfeedback 0.8
+-- # delay 0.8
+-- # accelerate ((choose [0.1,0.2 .. 0.5])# shrand 20) 
+-- # speed ((choose [0.25,0.5 .. 2])# shrand 220) 
+-- # up ("c'major'4")
+
+hush

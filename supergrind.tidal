@@ -1,0 +1,40 @@
+
+do 
+    let world p = slow "4 4 3 2" $ struct (cat ["t(3,5,2)","t(7,16,14)","t(11,24,14)","t(9,16)","t(13,24,5)", "t(4,9)"]) $ p
+    d1 
+        -- $ slow 5
+        $ whenmod 17 13 (slow 1.25)
+        -- $ every 4 (palindrome)
+        $ jux (off (slow 12 $ segment 16 $ range 0 0.5 $ saw) (slow 1.25))
+        $ stack [
+                layer [id, (# s "midi").(# midichan 13).(# n (irand 80))] $
+                sew (slow 4 $ bizy) (world $ s "supergrind") (s "supergrind*9")
+                -- # n ("c'min7'3")
+                |+  n (scale "prometheus" "<[<-12 -4> .. <10 12 9>][<10 9 [8]> .. <0 -5 -8>]*[2]>" ) 
+                -- |-  n "<12>"
+                # lpf (range 200 17000 $ rand)
+        ]
+        # sustain (slow 13 $ range 2.4 7.73 $ saw)
+        # attack (world $ 1.5)
+        # release 3
+        # cps (slow 14 $ range 0.3 0.5 $ saw)
+        # detune (osc64 45.3 0 12 sine)
+        # voice (osc64 5.3 (-2) 2 sine)
+      
+hush
+
+
+--kindohm twitch drone
+d1
+-- $ degradeBy 0.5 
+$ (2 <~)
+$ (|+ note ((123<~) $ choose [0,-12,-24]))
+$ s "supergrind"
+# note (scale "minor" ((33<~) $ choose [0,1..10]))
+# legato ((44 <~) $ choose [2,2.25..4])
+# gain 1.2
+# cps (160/120/2)
+|+ detune (osc64 45.3 0 12 sine)  
+|+ voice (osc64 14.3 (-2) 2 sine)
+      
+hush

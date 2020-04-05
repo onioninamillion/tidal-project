@@ -1,0 +1,83 @@
+d1
+-- $ sometimes (loopAt 4)
+$ jux (slow (choose [3,6..12]))
+$ stack
+[
+-- spaceOut ( (map (1/) [1,1.5..10] ) ++ (map (1/) [8,7.75..1])) $
+stut' 2 0.25
+      ((sometimes $ density (choose [1.2,1.66,2.6])).
+      -- (|+|resonance (slow 10 $ sine*0.1)).
+      (|+|cutoff (slow 14 (range 1000 2700 $ saw))).
+      (sometimes $ (|+|accelerate(choose [-2,1]))).
+      (|*|gain (slow 4 (rangex 0.7 1 $ sine))).
+      (|+| pan "1 0"))
+(sound "tboat*1"
+     -- |+| speed (fast 20.2 $ range 0.75 1.1 $saw)
+     )
+      # n (slow 40 $ run 40)
+      # pan (slow 3 $ rand)
+      -- # begin (slow 5 (range 0.05 0.95 $sine))
+      -- # release (fast 0.3 (range 1 1.5 $ sine))
+      -- # attack (fast 18 (range 1.2 0.5 $ sine))
+      # cut 1
+      # nudge (slow 10 $ iter 14 "0.5,0.75..14")
+    -- |+| hpf  (slow 12 $ sine*210)
+]
+
+hush
+
+cps 0.4
+
+d2
+-- t1 (xfadeIn 200)
+  -- $ spaceOut [1,1.1,0.9,0.95,1.7,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.8]
+  $ juxBy 0.2 ((0.02 <~).(slow 0.85))
+  $ off ( toRational <$> (range 0.15 1 $ fast 7 rand))
+  (# speed (slow 12 (range 1.1 1 $saw)))
+  $ striate' 10  (choose [0.22,1.5,0.1,0.2,0.3])
+  $ sound "[tboat*4]"
+  |+| n (slow 30 $ run 30)
+  -- # attsaw 10 0.1 0.18
+  # begin "0"
+  # attack (range 0.8 0.15 (slow 2 square))
+  |+| attack (efull 2 11 "0.5" "1.01")
+  # release (range 1.35 0.5 (slow 10 sine))
+  |+|cutoff (slow 2 (range 200 1700 $ saw))
+
+  # cut 0
+
+cps 5.5
+
+
+  d3
+  -- $ loopAt 1.3
+  -- $ juxBy 0.2 ((0.02 <~).(slow 1.1).(# pan "1"))
+  $ off ( toRational <$> (range 0.2 1 $ fast 2 saw))
+  ((|+| n "1").(|+| pan "0.7")
+  .(|=| speed (slow 54 (range 1 0.86 $ saw)))
+  .(|=| hpf (slow 166 (range 440 6000 $ saw)))
+  )
+  $ off ( toRational <$> (range 2.5 1 $ fast 2 saw))
+  ((|+| n "2").(|+| pan (slow 15 (range 1 0.3 $ sine)))
+  .(|+| accelerate "-0.01")
+  .(|=| hpf (slow 300 (range 50 5000 $ sine)))
+  )
+    -- $ loopAt 1
+  -- t1 (xfadeIn 200)
+    -- $ juxBy 0.2 ((0.02 <~).(slow 0.85))
+    -- $ off ( toRational <$> (range 0.15 1 $ fast 7 rand))
+    -- (# speed (slow 12 (range 1.1 1 $saw)))
+    -- $ striate' 10  (choose [0.22,1.5,0.1,0.2,0.3])
+    $ sound "[tmrt]"
+    |+| n (slow 955 $ run 955)
+    # gain 1.6
+    # attack (range 0.13 0.15 (slow 2 square))
+    |+| attack (efull 2 11 "0.5" "1.01")
+    # release (range 1.35 1.5 (slow 10 sine))
+    -- |=| lpf (slow 37 (range 250 2000 $ saw))
+
+  hush
+
+  d1 $ n "0 2 4 7" # s "midi"
+
+  d1 silence

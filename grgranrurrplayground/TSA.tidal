@@ -1,0 +1,197 @@
+do 
+  p "midiclock" $ midicmd "midiClock*48" # s "midi" # cps 1
+
+  once $ midicmd "stop" # s "midi"
+
+  p "midictl" $ midicmd "start/4" # s "midi"
+  
+  p "midictl" $ silence
+
+TSA underwater-----aqueexejoin / sew trigger /
+
+let
+  vdelaymix      = s "midi" # ccn 20 # midichan 3
+  vdelaytime     = s "midi" # ccn 21 # midichan 3
+  vdelayfeedback = s "midi" # ccn 22 # midichan 3 
+  vdelayspaceing = s "midi" # ccn 23 # midichan 3
+  vdelayswellrep = s "midi" # ccn 24 # midichan 3
+  vdelaytapA     = s "midi" # ccn 25 # midichan 3
+  vdelaytapB     = s "midi" # ccn 26 # midichan 3
+  vdelaytapC     = s "midi" # ccn 27 # midichan 3
+  vdelaytapD     = s "midi" # ccn 28 # midichan 3
+  notelength     = s "midi" # ccn 16 # midichan 3
+  arprate        = s "midi" # ccn 17 # midichan 3
+  aaltofmix      = s "midi" # ccn 30 # midichan 0
+  mod            = s "midi" # ccn 20 # midichan 0
+  mod2           = s "midi" # ccn 21 # midichan 0
+  mod3           = s "midi" # ccn 22 # midichan 0
+      
+--1
+do 
+  let 
+      retrig = (slow 6 $ sew "t f" (otrigger saw "1 _ _ _ 1 _ _ _ 1 _ ") (trigger 1 saw))
+      spat p = bite 4 "{0 4 3 [0 2] 0*2 5 4 [6 1]}/<5 8 3 5 9 2>" $ struct "t(4,<16 8 6>)" $ p
+      every5 p = slow 5 $ p
+  p "tsa" 
+          $ slow "<1 2 3.2 1.2 1>"
+          -- $ every 4 ((iter 4).(+ note 12))
+          -- $ every 5 (chunk 4 (degradeBy 0.5).(iter 8).(+ note 12)) 
+          -- $ every 6 (chunk 4 (degradeBy 0.2).(iter 4).(|+ note 7)) 
+          $ stack [
+              spat $ s "midi" |+ note (slow 8 $ scale "chinese" "-12 .. 36") 
+            , degradeBy 0 $ bite 8 " 4 2 [2 0 1] 2*4" $ slow 1 $ spat $ s "midi" |+ note (slow 15.4 $ scale "chinese" "-24 .. <12 34>")
+            , degradeBy 0 $ bite 16 "<10 12 4 5>*6 [4 2 ~ ~]*4" $ spat $ s "byd:3" # gain 1.5
+            , every 4 (# note 2 ) $ s "~ cp:2" # gain 1.2 |- speed "0.5"
+            ]
+            # note (scale "chinese" "-20 .. 10")
+  p "cc" $ stack [
+                mod # ccv (slow 3 $ segment 26 $ range 1 124 retrig) 
+              , mod2 + ccv (range 0 24 (perlin + 0.2)) 
+              , mod3 + ccv (range 20 120 (perlin + 0.6))  
+              -- , every5 $ vdelaytime + ccv ( range 1 69 $ retrig ) 
+              -- , every5 $ vdelayspaceing + ccv ( range 100 10 $ retrig )
+              -- , every5 $ vdelaymix + ccv ( range 90 10 $ retrig )
+              -- , spat $ vdelaytapA # ccv ((choose[127,1,2,122])) 
+              -- , fast 3 $ spat $ vdelaytapB # ccv ((choose[127,1])) 
+              -- , fast 3 $ spat $ vdelaytapC # ccv ((choose[127,1,3,125])) 
+              -- , fast 2 $ spat $ vdelaytapD # ccv ((choose[127,126,6,1]))
+              -- , notelength + ccv (slow "<5 3.4 6.4 1.2>" $ segment 120 $ smooth "80 [50 70] 15 70")
+              -- , arprate + ccv (slow "<3.5 2.5 2.6>" $ segment 20 $ range "<91 72 83 64 95 26 67 78 99>" 110 $ saw)
+              ]
+            # cps "0.6"
+            * cps "<1.23 1 1 0.74 1.02 1.05 0.58 2 2 1.25>"
+
+ scaleList
+             
+hush
+
+
+
+--2
+do 
+  let 
+      retrig = (slow 1 $ segment 64 $ otrigger saw "1 _ _ _ 1 _ _ _ 1 _ ")
+      spat p = struct "t*3" $ p
+      every5 p = slow 3 $ p
+  p "tsa" 
+          $ slow 1
+          $ stack [
+              -- spat $ 
+              -- g $
+              -- degradeBy 0.4 $ 
+              every 5 ((fast 2).(+ n 5)) $
+              every 4 ((rev).(fast 2)) $
+              fast 3 $ 
+              struct "t(2,<14 12 9 9 3 2 1>)" $
+              s "midi"
+              + n (slow 12.1 $ scale "superLocrian" " -12 .. <12 12 24>")
+            --  # release 2
+            --  |+ n "[0 7]/12"
+             ,
+            spat
+            $ g  
+            $ s "tabla"
+            + n (scan "[9 20]/30")
+            |+ n (range (2) 20 $ retrig)
+              -- + note (slow 4 $ scale "chinese" "-12 .. 4") 
+            , degradeBy 0 $ bite 16 "<10 12 4 5>*3 [4 2 ~ ]*4" $ spat $ s "byd:3" # gain 1.5
+            , every 4 (# note 1) $ s "~ cp:2" # gain 1.2 |+ speed "0.5"
+            ]
+            -- # note (scale "chinese" "-20 .. 10")
+  p "cc" $ stack [
+                mod  # ccv (slow 1 $ segment 26 $ range 100 1 retrig) 
+              , mod2 + ccv (range 100 24 (perlin + 0.2)) 
+              , mod3 + ccv (range 110 10 (perlin + 0.6))  
+              , every5 $ vdelaytime + ccv ( range 3 8 $ retrig )      
+              , every5 $ vdelayspaceing + ccv ( range 11 2 $ retrig )
+              , every5 $ vdelaymix + ccv ( range 90 10 $ retrig )
+              -- , spat $ vdelaytapA # ccv ((choose[127,1,2,122])) 
+              , fast 3 $ spat $ vdelaytapB # ccv ((choose[127,1])) 
+              -- , fast 3 $ spat $ vdelaytapC # ccv ((choose[127,1,3,125])) 
+              , fast 2 $ spat $ vdelaytapD # ccv ((choose[127,126,6,1]))
+              -- , notelength + ccv (slow "<5 3.4 6.4 1.2>" $ segment 120 $ smooth "80 [50 70] 15 70")
+              ]
+            # cps "1"
+            * cps "<1.23 1 1 0.74 1.02 1.05 1.8 2 2 1.25>"
+
+            d1
+            $ whenmod 21 18 (iter 8)
+            -- $ sometimes (stutWith 32 (0.0625/2) ((|* speed 1.5).(|* gain 0.9)))
+            $ every 5 (# accelerate "{-1.2 1 0.5 -0.2}%13")
+            $ stack [
+            rarely (stutWith 32 (0.0625/2) ((|* speed 1.5).(|* gain 0.9)))
+            $ sometimes (stutWith "<2 1>" (0.125*4) id)
+            $ sound "~ cp"
+            # release 1
+            # bpf (range 1200 4000 $ slow 10.1 sine)
+            # n (irand 2)
+            # gain 1.6
+            ,
+            rarely (stutWith 3 (0.0625*4) id)
+            $ slow 2 $ s "byd:3(3,16,<1 3 0>)" # gain 1.5 # speed 1.4
+            ,
+            g $ 
+            (1001 <~)
+            -- $ whenmod 8 6 (fast 1.25)
+            $ whenmod 16 12 (linger 1.125)
+            $ degradeBy 0.125
+            -- $ slow "<2 3 3 1>"
+            $ sometimes (stutWith "<2 2 3 1>" (0.0625*3) id)
+            $ sound (sometimes(iter 8)"{midi(3,8,<1,2,0>)}")
+            --   # n "{0 1 2}%16"
+              -- # n (slow 3 $ )
+            --   # n (slow 1000 $ run 1000)
+              # speed 1
+              # cut 1
+              # release "{0.5 0.5 <0.5 0.75>}%12"
+              # begin (slow 2 $ segment 16 $ smooth "0 0.25 0.5 0.75")
+              # gain 1
+            -- ,s "[~ momo:1]*3 ~" # release (choose [0.12,0.2,0.125,1.5])# speed 1.06 # gain 1.2 # n (irand 0)
+            -- , (0 <~) $ degrade $ jux rev $ s "momo:3*32" # speed 0.95 # begin (slow 0.4 $ range 0 0.99 $ saw) # end 0.25 # release "[0.15 1 0.2]/2" |* gain 1.2
+            ] 
+            -- # cps "0.5"
+
+
+hush
+
+--TSA03_0 0105
+
+ d1
+--  $ spaceOut [1,1.1,0.9,0.95,1.7,1.25,0.8,1.65,1,0.7,0.823,1.5,1,2,1.8] 
+ $ slow "2 3"
+--  $ rev
+ $ every 5 (off 0.25 (# n "5 7 14 17").(slow 6))
+ $ within (0.25,0.5) (slow "<7 1 9 8>")
+ $ within (0.2,0.9) ((slow 2).(1.7<~))
+ $ iter 4
+ $ whenmod 5 2 ((spin 4).(rev))
+--  $ every 4 (|+| n "12")
+--  $ n "[0 14,5 [~ 40],-5 ~,21 [16 9]/3]*4"
+ $ n "[0 12*2 ,[5 ~]? ~ , [-7 ~] -7 [ ~ 0] [12 ~]?, 23 [12 9] [~ ~ 24]/4 12 ]*2"
+ # s "midi"
+ # midichan (choose [0,1,2]) 
+ # shrand 29
+ # cps 1
+
+t: spaceOut 
+
+ hush
+ 
+
+--POP arp riff
+
+d2
+$ fast 2
+$ whenmod 5 3 (|+| n "<2 5 3 3 2>")
+$ n "{0 4*2 7*5 11*2 14 9}%12"
+# dur (every 3 (density 2) $ "[0.1 0.2 0.5]/2" )
+--  # veloity "1"
+# modwheel (density 4 $ every 2 (rev) $ saw)
+# s "midi"
+# midichan "[1,2]"
+# cut 1
+# cps 0.5 
+# modwheel "1 0"
+
+hush
+

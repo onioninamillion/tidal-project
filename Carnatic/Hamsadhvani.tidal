@@ -1,0 +1,49 @@
+Arohana : S R G P N Ṡ
+
+let scale = getScale (scaleTable ++ [
+                                     ("hamsadhvani", [0,2,4,7,11])
+                                    ])
+
+
+
+
+Kedaragaula : 
+Arohanam	S R₂ M₁ P N₂ Ṡ       [0,2,5,7,10]
+Avarohanam	Ṡ N₂ D₂ P M₁ G₃ R₂ S [12,10,9,7,5,4,2]
+
+
+do 
+    let world p = slow "<2 2 3 4>" $ struct 
+                        (randcat [
+                        -- "t(3,5,2)",
+                    -- "t(7,16,14)",
+                    -- "t(11,24,14)",
+                    "t(9,16)",
+                    -- "t(13,24,5)",
+                    "t(4,9)"
+                        ]) $ p
+        scale = getScale (scaleTable ++ [
+                                     ("Kedaragaula-r", [0,2,5,7,10])
+                                    ,
+                                    ("Kedaragaula-f", [12,10,9,7,5,4,2])
+                                    ])
+    d3 
+        $ brak
+        $ jux (off (slow 12 $ segment 16 $ range 0 0.25 $ saw) (slow 1.02).(|- speed 0))
+        $ stack [
+                sew (slow 2 $ bizy) (world $ s "superfork") (s "[superfork*20]")
+                -- # n ("c'min7'4 f'min7'7")
+                |+  n (scale "Kedaragaula-r Kedaragaula-f" "<[-12 .. <10 5>][<4 10 8 9 5> .. <0 -5 -8>]*[2]>" ) 
+                -- |-  n "12"
+                -- |+ n (scale "hamsadhvani" (run 12))
+                # lpf (range 3000 1000 $ rand)
+                # lpq 0.1
+        ]
+         # sustain (slow 3 $ range 0.14 0.73 $ saw)
+        --  # attack (world $ 0.1)
+         # cps (slow 4 $ range 0.35 1 $ saw)
+        --  # orbit (irand 7)
+        --  + n ( range 0 12 $ smooth $ world $ sine )
+
+
+        hush

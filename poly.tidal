@@ -1,0 +1,22 @@
+cps 0.5
+
+d2
+$ density 0.1
+$ fast (choose [410,20,11,440,100,200,50])
+-- $ striate 2000
+$ sound"[bd*5,bd:6*10,808:1*4,808:2*3,bd:1*19]"
+
+
+d1
+$ fast "480"
+$ sound"[bd*4]"
+
+d1 silence
+
+d3
+$ fast "1"
+$ sound"[bd:3*3,808:2(5,1),808:3(4,1),808:4(7,1)]"
+
+d3 silence
+
+hush

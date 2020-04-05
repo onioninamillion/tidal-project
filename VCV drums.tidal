@@ -1,0 +1,20 @@
+do
+    let baseMidi = s "midi"
+        baseNote = n "0" # baseMidi # gain 1
+        bd =  baseNote # midichan 0
+        sn = baseNote  # midichan 1
+    d1 
+        $ stack [
+            g $
+            degradeBy 0.2 $ struct "t(<3 8 5 11>,8,<0 3 5>)" $ bd 
+            # n "[0,2,12]"
+            # legato 1.5
+            , 
+             fast 2 $ struct "[~ t]*8" $ s "byd:3" # gain 2.2 
+        ] 
+        # cps (160/120/2)
+
+hush
+
+
+d1 $ s "byd"

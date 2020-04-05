@@ -1,0 +1,163 @@
+---chatusra
+
+hush
+
+--3 notes
+d1 
+$ struct (select (rand) ["[t [t t]]" ,"[t t ~ t]","[[t t] t]" ]) 
+$ s "byd:3"
+
+d4 $ slow (4) $ s "cp:3" 
+
+d4 silence
+
+
+d1 $ s"byd:3*4" # bpm 120
+
+hush
+
+d1 $ s "byd"
+
+
+
+hush
+
+do 
+    let ja = 3
+      d2
+        $ superimpose ((3 <~).(sometimes (# s "etabla")))
+        $ fast 2
+        $ ply (slow 6 $ run 2 + 2)
+        $ s "gretsch"
+        -- $ s "etabla*1" 
+        # gain  (jathis ja 1.2 0.8 [5,2,3,2,1,4] )
+        # speed (jathis ja (-1) 1  [5])
+        # delay (jathis ja (0.7) 0 [9])
+        # n (jathis ja 0 4 [3,2,2,4,1,1,1])
+        # lpf   (jathis ja (14000) 4000 [3,1,2,3])
+        # delaytime 0.9
+        # delayfeedback 0.6
+        # bpm 100
+        -- # cut 1
+
+
+hush
+
+--2 notes
+d1 
+$ struct (select (rand) ["[t ~ ~ t]" ,"[t t]","[t t ~ ~]" ]) 
+$ s "bd"
+
+d2 $ s "cp:3" 
+
+d3 $ s "tink*4"
+
+
+--2+3 note
+          
+let chatusra a b = selectF (a-2) [
+            (struct (select (b/3) ["[t ~ ~ t]" ,"[t t]","[t t ~ ~]" ])),
+            (struct (select (b/3) ["[t [t t]]" ,"[t t ~ t]","[[t t] t]"]))
+            ] 
+    
+
+
+
+d1 $ chatusra 3 3 $ s "bd"
+
+
+
+-----khanda
+
+let khanda a b = selectF ((a-2)/2) [
+            -- 2 note
+            (struct (select (b/4) ["[t ~ ~ ~ t]" ,"[t t ~ ~ ~]","[t ~ ~ t ~]","[t ~ t ~ ~]" ])),
+            -- 3 note
+            (struct (select (b/6) ["[t ~ ~ t t]" ,"[t t ~ ~ t]","[t t t ~ ~]","[t ~ t ~ t]" ,"[t ~ t t ~ ]","[t t ~ t ~]"])),
+            -- 4 note
+            (struct (select (b/4) ["[t ~ t t t]" ,"[t t ~ t t]","[t t t ~ t]","[t t t t ~]" ]))
+            ] 
+
+d1 $ fast 2 $ ((slow (7) $ saw) <~) $ selectF 0 [(khanda "<4>" (slow 4 $ irand 3) ),(chatusra 3 3 ) ]$ s "tabla" # (fast "<7 7 5 5 3>" $ nl)
+
+d3 $ s "tink*5"
+
+hush
+
+
+-----tisra
+
+let tisra a b = selectF ((a-2)/3) [
+            -- 2 note
+            (struct (select (b/5) ["[t ~ ~ ~ ~ t]" ,"[t t ~ ~ ~ ~]","[t ~ ~ ~ t ~]","[t ~ t ~ ~ ~]" ,"[t ~ ~ t ~ ~]" ])),
+            -- 3 note
+            (struct (select (b/10) ["[t ~ ~ ~ t t]" ,"[t t ~ ~ ~ t]","[t t t ~ ~ ~]",
+                                    "[t ~ ~ t ~ t]" ,"[t ~ ~ t t ~]","[t ~ t t ~ ~]","[t ~ t ~ ~ t]","[t t ~ t ~ ~]","[t t ~ ~ t ~]",
+                                    "[t ~ t ~ t ~]"])),
+            -- 4 note
+            (struct (select (b/10) ["[t ~ ~ t t t]" ,"[t t ~ ~ t t]","[t t t ~ ~ t]","[t t t t ~ ~]",
+                                    "[t ~ t ~ t t]" ,"[t ~ t t t ~]","[t t t ~ t ~]","[t ~ t t ~ t]","[t t ~ t t ~]","[t t ~ t ~ t]"])),
+            -- 5 note
+            (struct (select (b/5) ["[t ~ t t t t]" ,"[t t ~ t t t]","[t t t ~ t t]","[t t t t ~ t]","[t t t t t ~]" ]))
+                                   ] 
+
+d1 $ fast 1 $ ((slow (7) $ saw) <~) $ selectF 0 [(tisra "5" (slow 4 $ irand 3) ),(chatusra 3 3 ) ]$ s "tabla" # (fast "<7 7 5 5 3>" $ nl)
+
+
+
+---misra
+
+let misra a b = selectF ((a-2)/4) [
+            -- 2 note
+            (struct (select (b/6) ["[t ~ ~ ~ ~ ~ t]","[t t ~ ~ ~ ~ ~]",
+                                   "[t ~ ~ ~ ~ t ~]","[t ~ t ~ ~ ~ ~]",
+                                   "[t ~ ~ ~ t ~ ~]","[t ~ ~ t ~ ~ ~]"])),
+            -- 3 note
+            (struct (select (b/15)["[t ~ ~ ~ ~ t t]","[t t ~ ~ ~ ~ t]","[t t t ~ ~ ~ ~]",
+                                   "[t ~ ~ ~ t ~ t]","[t ~ ~ ~ t t ~]","[t ~ t t ~ ~ ~]","[t ~ t ~ ~ ~ t]","[t t ~ t ~ ~ ~]","[t t ~ ~ ~ t ~]",
+                                   "[t ~ ~ t ~ t ~]","[t ~ t ~ ~ t ~]","[t ~ t ~ t ~ ~]",
+                                   "[t ~ ~ t ~ ~ t]","[t ~ ~ t t ~ ~]","[t t ~ ~ t ~ ~]"
+                                   ])),
+            -- 4 note
+            (struct (select (b/17)["[t ~ ~ ~ t t t]","[t t ~ ~ ~ t t]","[t t t ~ ~ ~ t]","[t t t t ~ ~ ~]",
+                                   "[t ~ ~ t ~ t t]","[t ~ ~ t t ~ t]","[t ~ ~ t t t ~]","[t ~ t ~ ~ t t]","[t ~ t t ~ ~ t]","[t ~ t t t ~ ~]","[t t t ~ t ~ ~]","[t t ~ t t ~ ~]","[t t ~ t ~ ~ t]",
+                                   "[t ~ t ~ t ~ t]","[t ~ t ~ t t ~]","[t ~ t t ~ t ~]","[t t ~ t ~ t ~]"])),
+            -- 5 note
+            (struct (select (b/15)["[t ~ ~ t t t t]","[t t ~ ~ t t t]","[t t t ~ ~ t t]","[t t t t ~ ~ t]","[t t t t t ~ ~]",
+                                    "[t ~ t ~ t t t]","[t ~ t t ~ t t]","[t ~ t t t ~ t]","[t ~ t t t t ~]","[t t ~ t ~ t t]",
+                                    "[t t ~ t t ~ t]","[t t ~ t t t ~]","[t t t ~ t ~ t]","[t t t ~ t t ~]","[t t t t ~ t ~]"])),
+            -- 6 note
+            (struct (select (b/6) ["[t ~ t t t t t]" ,"[t t ~ t t t t]","[t t t ~ t t t]","[t t t t ~ t t]","[t t t t t ~ t]","[t t t t t t ~]" ]))
+                                   ] 
+
+
+d3 
+$ ((slow (7) $ saw) <~) 
+$ selectF 0 [(misra "5" (slow 4 $ irand 20) ),(chatusra 3 4 ) ]
+$ s "tabla*7" # (fast "<17 4 4 2 3>" $ nl) # cps 0.6
+
+
+hush
+
+
+d2 $ s "cp:3" 
+
+d3 $ s "tink:120*7"
+
+--6 note
+d3
+$ struct (((slow (7) $ saw) <~) (select rand ["[t ~ t t t t t]","[t t t t t ~ ~]" ,"[t t t ~ ~ ~ ~]","[t t ~ ~]"]) ) 
+$ s "[tabla*7]"
+# nr
+# cps 1
+
+
+------((slow (7) $ saw) <~)
+d1 
+$ struct (((slow (7) $ saw) <~) (select rand ["[t ~ t t t t t]"]) ) 
+$ s "[tabla*7]"
+# nr
+# cps 1
+
+
+hush

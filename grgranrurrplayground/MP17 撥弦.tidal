@@ -1,0 +1,12 @@
+
+p "pluck"
+    $ struct "t(3,10)"
+    $ n (scale "hexDorian" "(run 10)")
+    # s "midi" 
+    # legato (slow 5 $ range 0.1 0.5 $ saw)
+    # cps 1
+    -- # cps (70/60/2)
+
+    hush
+
+    scaleList

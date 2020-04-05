@@ -1,0 +1,63 @@
+let dramp a b p = degradeBy (trigger 3 $ slow a $ range 0 b $ envL) $ p  
+
+
+do 
+  let srand = speed (range 0 (trigger 3 $ slow 5.1 $ range (0) 7 $ saw) $ saw)
+      dramp a b p = degradeBy (trigger 3 $ slow a $ range 0 b $ envL) $ p
+      sverb = room (range 0 (trigger 3 $ slow 12.1 $ range 0 1 $ saw) $ saw)
+  d1 
+    $ dramp 10 0.9
+    $ (# cps (slow 10 $ rangex 4.5 30 $ saw )) 
+    $ stack [
+            g $
+            dramp 1 0.3 $ s "stone:39" 
+            ,
+            off (range 0 1.4 $ slow 4 $ sine) ((# nr).(100 <~)) $
+            struct "t(4,11)" $
+            dramp 2 0.4 $
+            s "stone:2" 
+            -- # sverb 
+            -- # nr
+            -- # accelerate 1.4
+          --  |+ srand
+          --  |+ up (arp "<[updown ~] [up pinkyup]/2 disconverge/2 converge>" "<a'm9'8 f'7sus2'10 f'm6'4>")
+           ,
+            g $
+            dramp 10 0.4 $
+            off (range 0 1 $ slow 12 $ sine) (# srand) $
+            struct "t(2,3)" $
+            s "stone2" # gain 0.8
+            ]
+    # cut 0
+   |+ nl   
+    # lpf 4000
+
+hush
+
+
+d1 $ s "byd"
+
++ speed (range 1 (trigger 3 $ slow 30.1 $ range 1 30 $ saw) $ rand)
+
+let 
+
+do 
+  let srand = speed (slow 10 $ range 0 (rise1 20 1 0.3) $ sine)
+      sverb = room (range 0 (rise1 4 1 0) $ saw)
+  d1 
+    -- $ (|+ speed (degradeBy (rise1 1.1 0.3 0.04) (rise1 (choose [1,9]) 1 10) )) 
+    $ stack [
+      off (range 0 1.4 $ slow 4 $ sine) ((# nl).(10 <~)) $
+      struct "t*24" $
+      s "[kins3]"
+      # n (rise1 20.5 1 1000) 
+      -- # sverb
+      -- # size 0.9
+      -- # srand
+      -- # gain (rise1 1 1 )
+      ]
+      # lpf (osc64 12.2 14000 4000 sine)
+      -- # octersub 1
+      # cut 0
+
+      hush

@@ -1,0 +1,27 @@
+
+d1 
+$ slice 16 "{[~ 2*2] <3 ~ 7 5 15 13>*4 [<~ ~ ~ 4> 3*1]}"
+$ s "fnight" 
+# nl
+# cps 0.7
+# gain "1.4"  
+# cut 1
++ speed "2 -1 -2"
+|+ release (osc64 2.5 0.2 1.2 saw)
+
+
+d1 
+$ slice 16 (struct "{[f t*2] <t f t t t t>*4 [<f f f t f> t*1]}" $ (irand 16 + (slow 12 $ run 4)))
+$ s "bev" 
+# nl
+# cps 0.7
+# gain "1.4"  
+# cut 1
++ speed "2 -1 -2"
+|+ release (osc64 2.5 0.2 1.2 saw)
+
+
+d2 $ sew (slow 2 $ rev $ bizy) (sew (slow 2 $ bizy) (s "bd*3") (s "bd*4")) ( sew (slow 2 $ bizy) (s "bd*4") (s "bd*5"))
+
+
+hush

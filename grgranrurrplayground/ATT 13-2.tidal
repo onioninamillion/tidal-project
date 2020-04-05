@@ -1,0 +1,110 @@
+let aadelaytime = ccn 20 # s "midi"  # midichan 0
+    aalto = s "midi"  # midichan 0
+    aaltolfolevel = ccn 21 # s "midi"  # midichan 0
+    kaivo = s "midi"  # midichan 1
+    kaivomod = ccn 21 # s "midi"  # midichan 1
+    kaivomod2 = ccn 22 # s "midi"  # midichan 1
+    kaivomod3 = ccn 23 # s "midi"  # midichan 1
+    kaivorate = ccn 30 # s "midi"  # midichan 1
+    kaivopitch = ccn 31 # s "midi"  # midichan 1
+
+
+    hush
+
+
+
+
+do 
+    let a = range 1 8 $ saw
+        b = a + (range 4 0 $ perlin + 0.5)
+        patt p =  fast 2 $ segment 2 $ struct "t(3,<16 5 3>,a)" $ p
+        cpatt p =  segment 120 $ range 0 127 $ smooth $ patt $ p
+        notepatt p =  patt $ p
+        legpat = (slow "<2 2 3 4 1>" $ patt $ choose ([2.125,1.5,1.25,1.3])) 
+        cpspat = (notepatt $ segment (slow 4 "<2 1>")  $ choose ([0.8,1])) 
+        zoompat p = chunk 4 (zoom (0,0.33)) $ p
+    p "kaivo"
+        -- $ zoompat
+        -- $ whenmod 24 14 (+ note 2)
+        -- $ whenmod 45 40 (|- note 6)
+        -- $ every 9 (|- note "9 4")
+        -- $ every 10 (|+ note "2")
+    -- 　  $ every 4 (within (0.25,1)(|+ note "<2 1> <3 4 3>" ))
+        -- $ every 5 (stutWith 3 0.125 (# n (scale "china" "<9 9 6>")))        
+        -- $ every 3 ( + note ( scale "china" "-1 .. <3>"))
+        -- $ every 10 (+| note ( scale "china" "2 .. -6"))
+        -- $ deg4
+        $ stutWith 4 (0.125*3) (|* gain (rangex 0.8 1 $ saw)) 
+        $ fast 2
+        $ swingBy 0.125 "<4 8>"
+        $ stack 
+            [ 
+            --   note "[[-7,0,7,14,17,21](3,10,<2 5>)]"
+            --   ,
+            --   struct ("t t ~ t ") 
+            slow 1 $ patt $ note "[-12,<-7 -10>,0,5,<7>,9?,14,17,21]" 
+            ]
+           |+ legato (segment 16 $ (choose [0.01,0.3,5.4]) # shrand 120)
+           |+ legato (slow 8 $ segment 14 $ range 0.13 3 $ saw)            
+            # s "midi" # midichan "[1,0]"
+            - note "9" 
+        --    |- note (slow 5 "[-10*5 -7*5]/5") 
+    p "control" 
+        -- $ linger 1
+        -- $ zoompat
+        $ stack [
+                  kaivomod  >| ccv  ( cpatt $ segment (choose [120,10,40]) $ saw ) 
+                , kaivomod2 +| ccv "0 127"
+                , kaivomod3  +| ccv ( segment 16 $ irand 150) 
+                , kaivorate  +| ccv ( cpatt $ segment 16 $ smooth "0 120")
+                , kaivopitch +| ccv ( slow "<2 0.15 0.5>" $ segment 123 $ range 120 7 $ saw)
+                ]        
+    p "bd"
+        $ every 4 (within (0,0.125) (slow 0.4)) 
+        $ every 6 ((+ lpf (segment 4 $ range 60 1250 $ rand)).(# lpq 0.2)) 
+        $ whenmod 24 16 ((# pan (range 0.4 0.6 $ rand)).(# ssine 1 2 1 16))
+        $ degradeBy 0.2
+        $ patt 
+        $ sound "byd:1"
+        # speed 0.7
+        # gain 1
+    p "cp"
+        $ whenmod 24 16 ((# cps cpspat).(# ssine 1 0.4 1 16))
+        $ sometimes (stutWith 3 (0.1625*2) (|* gain 0.7))  --2/3
+        $ sound "~ cp:1"
+        # gain 0.8
+        * cps 0.8
+        
+    p "hh"
+        -- $ every 7 (loopAt 1)
+        $ notepatt
+        $ loopAt 2
+        -- $ fast 2
+        $ s "[tt4b:1]"
+        # legato 1
+        # begin (slow 10 $ segment 50 $ range 0.15 0.4 $ saw) 
+        -- + begin (segment 12 $ range 0.1 0.6 $ saw)
+        -- + n (slow 100 $ run 100)
+        # cut 1
+        # gain 1
+        -- # speed 0.95
+
+        hush
+
+scaleList
+
+    hush
+
+
+
+
+let scale = getScale (scaleTable ++ [("techno", [0,2,3,5,7,8,10]),("broken", [0,1,4,7,8,10])])
+
+d1  $ fast 2
+    $ struct "t t t [t t]" $ n "[1,5,7]" + n (segment 16 (scale "techno" "0 1 2 3 4 5 6 7")) # sound "superpiano" 
+
+
+    d1  $ fast 2
+    $ struct "t t t [t t]" $ n "[1,5,7]" + n (segment 16 (scale "techno" "<0 [-7 -10]> .. <7 [14 -5]> ")) # sound "superpiano"
+
+    hush
